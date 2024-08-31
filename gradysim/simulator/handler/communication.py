@@ -83,6 +83,9 @@ class CommunicationMedium:
     delay: float = 0
     """Sets a delay in seconds for message delivery, representing network delay. Range is evaluated before the delay is applied"""
 
+    delay_std_derivation: float = 0
+    """Standart derivation for normal distribution of delay"""
+
     failure_rate: float = 0
     """Failure chance between 0 and 1 for message delivery. 0 represents messages never failing and 1 always fails."""
 
@@ -170,6 +173,14 @@ class CommunicationHandler(INodeHandler):
 
             self._transmit_message(command.message, source, self._destinations[destination])
 
+    def _get_delay(self):
+        delay = 0
+        while delay <= 0:
+            delay = random.normalvariate(self.communication_medium.delay, self.communication_medium.delay_std_derivation)
+
+        return delay
+
+
     def _transmit_message(self, message: str, source: CommunicationSource, destination: CommunicationDestination):
         source.hand_over_message(message, destination)
 
@@ -182,7 +193,7 @@ class CommunicationHandler(INodeHandler):
                 )
             else:
                 self._event_loop.schedule_event(
-                    self._event_loop.current_time + self.communication_medium.delay,
+                    self._event_loop.current_time + self._get_delay(),
                     lambda: destination.receive_message(message, source),
                     label_node(destination.node) + " handle_packet"
                 )
