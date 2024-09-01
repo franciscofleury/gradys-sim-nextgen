@@ -11,6 +11,13 @@ from gradysim.simulator.handler.interface import INodeHandler
 
 from typing import Dict
 
+@dataclass
+class NodeCommunicationConfiguration:
+    transmission_range: float = 60
+    """Maximum range in meters for message delivery. Messages destined to nodes outside this range will not be delivered"""
+
+    failure_rate: float = 0
+    """Failure chance between 0 and 1 for message delivery. 0 represents messages never failing and 1 always fails."""
 
 class CommunicationDestination:
     """
@@ -18,8 +25,9 @@ class CommunicationDestination:
     used for logging.
     """
     node: Node
+    configuration: NodeCommunicationConfiguration
 
-    def __init__(self, node: Node):
+    def __init__(self, node: Node, configurations: NodeCommunicationConfiguration):
         """
         Creates a communication destination for a specific node. Doesn't need to be
         constructed directly, is used internally in the CommunicationHandler
@@ -28,6 +36,7 @@ class CommunicationDestination:
             node: Node owning the destination
         """
         self.node = node
+        self.configuration = configurations
         self._logger = logging.getLogger()
 
     def receive_message(self, message: str, source: 'CommunicationSource') -> None:
@@ -45,16 +54,31 @@ class CommunicationSource:
     constructed directly, is used internally in the CommunicationHandler
     """
     node: Node
+    _configurations: NodeCommunicationConfiguration
 
-    def __init__(self, node: Node):
+    def __init__(self, node: Node, failure_rate: float, transmission_range: float):
         """
         Creates a communication source for a specific node
 
         Args:
             node: Node owning the source
+            configurations: Node configuration
         """
         self.node = node
+        self._configurations = self.set_configuration(failure_rate=failure_rate, transmission_range=transmission_range)
         self._logger = logging.getLogger()
+
+    def set_configuration(self, failure_rate: float, transmission_range: float) -> None:
+        if failure_rate < 0:
+            logging.warning(f"Can't set negative failure_rate for {self.node.id} Node")
+            return
+        if transmission_range < 0:
+            logging.warning(f"Can't set negative transmission_range for {self.node.id} Node")
+            return 
+        config = NodeCommunicationConfiguration()
+        config.failure_rate = failure_rate
+        config.transmission_range = transmission_range
+        self._configurations = config
 
     def hand_over_message(self, message: str, endpoint: CommunicationDestination) -> None:
         """
@@ -138,8 +162,12 @@ class CommunicationHandler(INodeHandler):
         if not self._injected:
             raise CommunicationException("Error registering node: Cannot register node on uninitialized "
                                          "node handler")
-        self._sources[node.id] = CommunicationSource(node)
-        self._destinations[node.id] = CommunicationDestination(node)
+        
+        medium_configuration = NodeCommunicationConfiguration()
+        medium_configuration.failure_rate = self.communication_medium.failure_rate
+        medium_configuration.transmission_range = self.communication_medium.transmission_range
+        self._sources[node.id] = CommunicationSource(node, medium_configuration)
+        self._destinations[node.id] = CommunicationDestination(node, medium_configuration)
 
     def handle_command(self, command: CommunicationCommand, sender: Node):
         """
