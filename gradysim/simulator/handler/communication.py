@@ -9,7 +9,7 @@ from gradysim.simulator.node import Node
 from gradysim.protocol.position import Position
 from gradysim.simulator.handler.interface import INodeHandler
 
-from typing import Dict
+from typing import Dict, Optional
 
 @dataclass
 class NodeCommunicationConfiguration:
@@ -27,7 +27,7 @@ class CommunicationDestination:
     node: Node
     configuration: NodeCommunicationConfiguration
 
-    def __init__(self, node: Node, configurations: NodeCommunicationConfiguration):
+    def __init__(self, node: Node, failure_rate: float, transmission_range: float):
         """
         Creates a communication destination for a specific node. Doesn't need to be
         constructed directly, is used internally in the CommunicationHandler
@@ -36,8 +36,20 @@ class CommunicationDestination:
             node: Node owning the destination
         """
         self.node = node
-        self.configuration = configurations
+        self.configuration = self.set_configuration(failure_rate=failure_rate, transmission_range=transmission_range)
         self._logger = logging.getLogger()
+
+    def set_configuration(self, failure_rate: float, transmission_range: float) -> None:
+        if failure_rate < 0:
+            logging.warning(f"Can't set negative failure_rate for {self.node.id} Node")
+            return
+        if transmission_range < 0:
+            logging.warning(f"Can't set negative transmission_range for {self.node.id} Node")
+            return 
+        config = NodeCommunicationConfiguration()
+        config.failure_rate = failure_rate
+        config.transmission_range = transmission_range
+        self.configurations = config
 
     def receive_message(self, message: str, source: 'CommunicationSource') -> None:
         """
@@ -54,7 +66,7 @@ class CommunicationSource:
     constructed directly, is used internally in the CommunicationHandler
     """
     node: Node
-    _configurations: NodeCommunicationConfiguration
+    configurations: NodeCommunicationConfiguration
 
     def __init__(self, node: Node, failure_rate: float, transmission_range: float):
         """
@@ -65,7 +77,7 @@ class CommunicationSource:
             configurations: Node configuration
         """
         self.node = node
-        self._configurations = self.set_configuration(failure_rate=failure_rate, transmission_range=transmission_range)
+        self.configurations = self.set_configuration(failure_rate=failure_rate, transmission_range=transmission_range)
         self._logger = logging.getLogger()
 
     def set_configuration(self, failure_rate: float, transmission_range: float) -> None:
@@ -78,7 +90,7 @@ class CommunicationSource:
         config = NodeCommunicationConfiguration()
         config.failure_rate = failure_rate
         config.transmission_range = transmission_range
-        self._configurations = config
+        self.configurations = config
 
     def hand_over_message(self, message: str, endpoint: CommunicationDestination) -> None:
         """
@@ -111,15 +123,15 @@ class CommunicationMedium:
     """Failure chance between 0 and 1 for message delivery. 0 represents messages never failing and 1 always fails."""
 
 
-def can_transmit(source_position: Position, destination_position: Position, communication_medium: CommunicationMedium):
+def can_transmit(source_position: Position, destination_position: Position, communication_config: NodeCommunicationConfiguration):
     squared_distance = (destination_position[0] - source_position[0]) ** 2 + \
                        (destination_position[1] - source_position[1]) ** 2 + \
                        (destination_position[2] - source_position[2]) ** 2
-    in_range = squared_distance <= (communication_medium.transmission_range * communication_medium.transmission_range)
+    in_range = squared_distance <= (communication_config.transmission_range * communication_config.transmission_range)
 
     rng = True
-    if communication_medium.failure_rate > 0:
-        rng = random.random() > communication_medium.failure_rate
+    if communication_config.failure_rate > 0:
+        rng = random.random() > communication_config.failure_rate
     return rng & in_range
 
 
@@ -163,11 +175,8 @@ class CommunicationHandler(INodeHandler):
             raise CommunicationException("Error registering node: Cannot register node on uninitialized "
                                          "node handler")
         
-        medium_configuration = NodeCommunicationConfiguration()
-        medium_configuration.failure_rate = self.communication_medium.failure_rate
-        medium_configuration.transmission_range = self.communication_medium.transmission_range
-        self._sources[node.id] = CommunicationSource(node, medium_configuration)
-        self._destinations[node.id] = CommunicationDestination(node, medium_configuration)
+        self._sources[node.id] = CommunicationSource(node, self.communication_medium.failure_rate, self.communication_medium.transmission_range)
+        self._destinations[node.id] = CommunicationDestination(node, self.communication_medium.failure_rate, self.communication_medium.transmission_range)
 
     def handle_command(self, command: CommunicationCommand, sender: Node):
         """
@@ -201,7 +210,7 @@ class CommunicationHandler(INodeHandler):
     def _transmit_message(self, message: str, source: CommunicationSource, destination: CommunicationDestination):
         source.hand_over_message(message, destination)
 
-        if can_transmit(source.node.position, destination.node.position, self.communication_medium):
+        if can_transmit(source.node.position, destination.node.position, source.configurations):
             if self.communication_medium.delay <= 0:
                 self._event_loop.schedule_event(
                     self._event_loop.current_time,
@@ -214,3 +223,28 @@ class CommunicationHandler(INodeHandler):
                     lambda: destination.receive_message(message, source),
                     label_node(destination.node) + " handle_packet"
                 )
+
+_active_handler: Optional[CommunicationHandler] = None
+
+class CommunicationController:
+
+    def __init__(self) -> None:
+        self._communication_handler = _active_handler
+
+        if self._communication_handler == None:
+            logging.warning("No communication handler active, communication config commands will be ignored")
+
+    def set_node_configuration(self, node_id: int, failure_rate: Optional[float] = None, transmission_range: Optional[float] = None):
+        if (node_id not in self._communication_handler._sources) or (node_id not in self._communication_handler._destinations):
+            logging.warning(f"Node {node_id} doesn't exist, ignoring set_node_configuration command")
+            return
+        if failure_rate == None:
+            failure_rate = self._communication_handler.communication_medium.failure_rate
+        if transmission_range == None:
+            transmission_range = self._communication_handler.communication_medium.transmission_range
+        node_source = self._communication_handler._sources[node_id]
+        node_destination = self._communication_handler._destinations[node_id]
+        node_source.set_configuration(failure_rate, transmission_range)
+        node_destination.set_configuration(failure_rate, transmission_range)
+        return
+        
