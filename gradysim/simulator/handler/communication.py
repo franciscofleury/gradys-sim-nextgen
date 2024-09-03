@@ -36,20 +36,8 @@ class CommunicationDestination:
             node: Node owning the destination
         """
         self.node = node
-        self.configuration = self.set_configuration(failure_rate=failure_rate, transmission_range=transmission_range)
+        self.configuration = NodeCommunicationConfiguration(failure_rate=failure_rate, transmission_range=transmission_range)
         self._logger = logging.getLogger()
-
-    def set_configuration(self, failure_rate: float, transmission_range: float) -> None:
-        if failure_rate < 0:
-            logging.warning(f"Can't set negative failure_rate for {self.node.id} Node")
-            return
-        if transmission_range < 0:
-            logging.warning(f"Can't set negative transmission_range for {self.node.id} Node")
-            return 
-        config = NodeCommunicationConfiguration()
-        config.failure_rate = failure_rate
-        config.transmission_range = transmission_range
-        self.configurations = config
 
     def receive_message(self, message: str, source: 'CommunicationSource') -> None:
         """
@@ -77,20 +65,8 @@ class CommunicationSource:
             configurations: Node configuration
         """
         self.node = node
-        self.configurations = self.set_configuration(failure_rate=failure_rate, transmission_range=transmission_range)
+        self.configurations = NodeCommunicationConfiguration(failure_rate=failure_rate, transmission_range=transmission_range)
         self._logger = logging.getLogger()
-
-    def set_configuration(self, failure_rate: float, transmission_range: float) -> None:
-        if failure_rate < 0:
-            logging.warning(f"Can't set negative failure_rate for {self.node.id} Node")
-            return
-        if transmission_range < 0:
-            logging.warning(f"Can't set negative transmission_range for {self.node.id} Node")
-            return 
-        config = NodeCommunicationConfiguration()
-        config.failure_rate = failure_rate
-        config.transmission_range = transmission_range
-        self.configurations = config
 
     def hand_over_message(self, message: str, endpoint: CommunicationDestination) -> None:
         """
@@ -165,6 +141,12 @@ class CommunicationHandler(INodeHandler):
         self._sources = {}
         self._destinations = {}
         self.communication_medium = communication_medium
+
+        """
+        Sets CommunicationHandler global instance for CommunicationController
+        """
+        global _active_handler
+        _active_handler = self
 
     def inject(self, event_loop: EventLoop):
         self._injected = True
@@ -244,7 +226,13 @@ class CommunicationController:
             transmission_range = self._communication_handler.communication_medium.transmission_range
         node_source = self._communication_handler._sources[node_id]
         node_destination = self._communication_handler._destinations[node_id]
-        node_source.set_configuration(failure_rate, transmission_range)
-        node_destination.set_configuration(failure_rate, transmission_range)
+        if failure_rate < 0:
+            logging.warning(f"Negative failure_rate, ignoring set_node_configuration command. (Node_id: {node_id}, failure_rate: {failure_rate})")
+            return
+        if transmission_range < 0:
+            logging.warning(f"Negative transmission_range, ignoring set_node_configuration command. (Node_id: {node_id}, transmission_range: {transmission_range})")
+            return
+        node_source.configurations = NodeCommunicationConfiguration(failure_rate=failure_rate, transmission_range=transmission_range)
+        node_destination.configurations = NodeCommunicationConfiguration(failure_rate=failure_rate, transmission_range=transmission_range)
         return
         
