@@ -1,0 +1,1 @@
+TEST_NAME = "ardupilot_get_equal_speed_2000"
