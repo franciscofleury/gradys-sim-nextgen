@@ -1,1 +1,1 @@
-TEST_NAME = "ardupilot_get_equal_speed_2000"
+TEST_NAME = "mobility_get_equal_speed_1000"

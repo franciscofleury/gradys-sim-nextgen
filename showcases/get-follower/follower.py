@@ -17,7 +17,7 @@ class FollowerProtocol(IProtocol):
 
     def initialize(self) -> None:
 
-        create_statistics(self, TEST_NAME)
+        #create_statistics(self, TEST_NAME)
 
         self.provider.schedule_timer("get_position", self.provider.current_time() + GET_POSITION_INTERVAL)
 
@@ -35,4 +35,5 @@ class FollowerProtocol(IProtocol):
         self.provider.send_mobility_command(GotoCoordsMobilityCommand(message.x + OFFSET_X, message.y + OFFSET_Y, message.z))
 
     def finish(self) -> None:
-        finish_statistics(self)
+        #finish_statistics(self)
+        pass
