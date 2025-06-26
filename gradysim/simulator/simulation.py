@@ -1,4 +1,5 @@
 import logging
+import asyncio
 import random
 import time
 from dataclasses import dataclass
@@ -13,7 +14,6 @@ from gradysim.simulator.event import EventLoop
 from gradysim.simulator.handler.interface import INodeHandler
 from gradysim.simulator.log import setup_simulation_formatter, label_node
 from gradysim.simulator.node import Node
-
 _FORCE_FAST_EXECUTION = False
 
 
@@ -185,7 +185,7 @@ class Simulator:
 
         self._formatter.prefix = f"[it={iteration} time={timedelta(seconds=timestamp)} | {context}] "
 
-    def _initialize_simulation(self) -> None:
+    async def _initialize_simulation(self) -> None:
         self._initialized = True
 
         self._old_logger_level = self._logger.level
@@ -193,13 +193,17 @@ class Simulator:
             self._logger.setLevel(logging.WARNING)
 
         for handler in self._handlers.values():
-            handler.initialize()
+            if hasattr(handler, "initialize") and asyncio.iscoroutinefunction(handler.initialize):
+                await handler.initialize()
+            else:
+                handler.initialize()
+            
 
         for node in self._nodes.values():
             self.scope_event(0, 0, f"{label_node(node)} Initialization")
             node.protocol_encapsulator.initialize()
 
-    def _finalize_simulation(self) -> None:
+    async def _finalize_simulation(self) -> None:
         if self._finalized:
             return
 
@@ -208,7 +212,10 @@ class Simulator:
             node.protocol_encapsulator.finish()
 
         for handler in self._handlers.values():
-            handler.finalize()
+            if hasattr(handler, "finalize") and asyncio.iscoroutinefunction(handler.finalize):
+                await handler.finalize()
+            else:
+                handler.finalize()
 
         self._formatter.clear_iteration()
         self._finalized = True
@@ -227,7 +234,7 @@ class Simulator:
         if not self._configuration.execution_logging:
             self._logger.setLevel(self._old_logger_level)
 
-    def step_simulation(self) -> bool:
+    async def step_simulation(self) -> bool:
         """
         Performs a single step in the simulation. This method is useful if you want to run the simulation in a
         non-blocking way. This method will run a single event from the event loop and then return, updating
@@ -237,10 +244,10 @@ class Simulator:
             False if the simulation is done, True otherwise
         """
         if not self._initialized:
-            self._initialize_simulation()
+            await self._initialize_simulation()
 
         if self.is_simulation_done():
-            self._finalize_simulation()
+            await self._finalize_simulation()
             return False
 
 
@@ -249,7 +256,7 @@ class Simulator:
 
         if self._configuration.profile:
             start_time = time.time()
-
+        
         event.callback()
 
         if self._configuration.profile:
@@ -267,11 +274,14 @@ class Simulator:
         is_done = self.is_simulation_done()
 
         if is_done:
-            self._finalize_simulation()
+            await self._finalize_simulation()
 
         return not is_done
 
     def start_simulation(self) -> None:
+        asyncio.run(self.run_loop())
+
+    async def run_loop(self) -> None:
         """
         Call this method to start the simulation. It is a blocking call and runs until either no event is left in the
         event loop or a termination condition is met. If not termination condition is set and events are generated
@@ -286,13 +296,19 @@ class Simulator:
             next_event = self._event_loop.peek_event()
 
             if next_event is not None and self._configuration.real_time and not _FORCE_FAST_EXECUTION:
-                time_until_next_event = (next_event.timestamp - (self._current_timestamp + last_step_duration))
-                sleep_duration = time_until_next_event / self._configuration.real_time
+                #time_until_next_event = (next_event.timestamp - (self._current_timestamp + last_step_duration))
+                #sleep_duration = time_until_next_event / self._configuration.real_time
+                sleep_duration = (next_event.timestamp - (self._current_timestamp + last_step_duration)) ; self._configuration.real_time
+                self._logger.debug(f"Sleeping duration: {sleep_duration}")
+                self._logger.debug(f"Next event: {next_event.context} at {timedelta(seconds=next_event.timestamp)}")
+                self._logger.debug(f"Current timestamp: {timedelta(seconds=self._current_timestamp)}")
+                self._logger.debug(f"Last step duration: {timedelta(seconds=last_step_duration)}")
                 if sleep_duration > 0:
-                    time.sleep(sleep_duration)
+                    self._logger.debug(f"Sleeping for {timedelta(seconds=sleep_duration)} until next event")
+                    await asyncio.sleep(sleep_duration)
 
             step_start = time.time()
-            is_running = self.step_simulation()
+            is_running = await self.step_simulation()
             last_step_duration = time.time() - step_start
 
         self._logger.info("[--------- Simulation finished ---------]")
