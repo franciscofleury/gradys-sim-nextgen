@@ -166,7 +166,7 @@ class ArdupilotMobilityConfiguration:
     Configuration class for the Ardupilot mobility handler
     """
 
-    update_rate: float = 1.5
+    update_rate: float = 1
     """Interval in simulation seconds between Ardupilot mobility updates"""
 
     default_speed: float = 10
