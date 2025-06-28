@@ -1,1 +1,0 @@
-TEST_NAME = "mobility_get_equal_speed_1000"
