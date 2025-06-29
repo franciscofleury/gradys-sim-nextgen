@@ -33,7 +33,7 @@ class Drone:
                 response_obj = AsyncHttpResponse(response.status, await response.json())
                 return response_obj
             else:
-                raise Exception(f"Failed to fetch data from {url}. Status code: {response.status_code}")
+                raise Exception(f"Failed to fetch data from {url}. Status code: {response.status}")
 
     async def post(self, url, json=None):
         async with self.session.post(self.drone_url + url, json=json) as response:
@@ -41,7 +41,7 @@ class Drone:
                 response_obj = AsyncHttpResponse(response.status, await response.json())
                 return response_obj
             else:
-                raise Exception(f"Failed to post data to {url}. Status code: {response.status_code}")
+                raise Exception(f"Failed to post data to {url}. Status code: {response.status}")
 
     def __init__(self, node_id, initial_position, logger):
         self._logger = logger
@@ -67,7 +67,11 @@ class Drone:
         ned_position = {"x": position[0], "y": position[1], "z": -position[2]}
         self.add_request(lambda: self.post("/movement/go_to_ned", json=ned_position))
 
+    def stop(self):
+        self.add_request(lambda: self.get("/command/stop"))
 
+    def set_speed(self, speed: int):
+        self.add_request(lambda: self.get("/command/set_air_speed", params={"new_v": speed}))
     def add_request(self, coro):
         self._request_queue.put_nowait(coro)
 
@@ -285,14 +289,14 @@ class ArdupilotMobilityHandler(INodeHandler):
         if command.command_type == MobilityCommandType.GOTO_COORDS:
             drone.move_to((command.param_1, command.param_2, command.param_3))
         elif command.command_type == MobilityCommandType.GOTO_GEO_COORDS:
+            # This can be improved
             relative_coords = geo_to_cartesian(self._configuration.reference_coordinates,
                                                (command.param_1, command.param_2, command.param_3))
             drone.move_to(relative_coords, node)
-        # elif command.command_type == MobilityCommandType.SET_SPEED:
-        #     self.speeds[node.id] = command.param_1
-
-    def _stop(self, node: Node):
-        pass
+        elif command.command_type == MobilityCommandType.SET_SPEED:
+            drone.set_speed(command.param_1)
+        elif command.command_type == MobilityCommandType.STOP:
+            drone.stop()
 
     async def finalize(self):
         for node_id in self.drones.keys():
