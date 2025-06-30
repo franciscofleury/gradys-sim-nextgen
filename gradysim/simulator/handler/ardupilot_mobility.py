@@ -72,6 +72,10 @@ class Drone:
 
     def set_speed(self, speed: int):
         self.add_request(lambda: self.get("/command/set_air_speed", params={"new_v": speed}))
+    
+    async def set_sim_speedup(self, speedup: int):
+        await self.get("/command/set_sim_speedup", params={"sim_factor": speedup})
+
     def add_request(self, coro):
         self._request_queue.put_nowait(coro)
 
@@ -102,7 +106,7 @@ class Drone:
         if speedup:
             self.speedup = speedup
         else:
-            self.speedup = 1
+            self.speedup = 10
 
         self.drone_url = f"http://localhost:{self.port}"
 
@@ -138,6 +142,10 @@ class Drone:
             raise(f"[DRONE-{self.node_id}] Failed to go to start position.")
         self._logger.debug(f"[DRONE-{self.node_id}] Go to start position complete.")
 
+        self._logger.debug(f"[DRONE-{self.node_id}] Setting simulation speedup to 1.")
+        await self.set_sim_speedup(1)
+        self._logger.debug(f"[DRONE-{self.node_id}] Simulation speedup set to 1.")
+        self._logger.debug(f"[DRONE-{self.node_id}] Starting request consumer task.")
         self._request_consumer_task = asyncio.create_task(self._request_consumer())
         
         await self.update_telemetry()
