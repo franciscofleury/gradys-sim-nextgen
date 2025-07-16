@@ -114,7 +114,7 @@ class Drone:
         self.session = session
 
     def start_drone(self):
-        raw_args = ['--simulated', 'true', '--sysid', f'{self.sysid}', '--port', f'{self.port}', '--uav_connection', self.uav_connection, '--speedup', f'{self.speedup}', '--log_console', 'COPTER', '--log_path', '../../uav_logs']
+        raw_args = ['--simulated', 'true', '--sysid', f'{self.sysid}', '--port', f'{self.port}', '--uav_connection', self.uav_connection, '--speedup', f'{self.speedup}', '--log_console', 'COPTER']
 
         self.api_process = run_with_args(raw_args)
 
