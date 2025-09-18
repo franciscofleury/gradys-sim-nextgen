@@ -98,7 +98,7 @@ class Drone:
         if uav_connection:
             self.uav_connection = uav_connection
         else:
-            self.uav_connection = f'127.0.0.1:17{171+self.node_id}'
+            self.uav_connection = f'127.0.0.1:17{170+self.node_id}'
         if sysid:
             self.sysid = sysid
         else:
@@ -239,9 +239,9 @@ class ArdupilotMobilityHandler(INodeHandler):
 
         drone_tasks = []
         for node_id in self.nodes.keys():
-            self.http_session = aiohttp.ClientSession()
+            http_session = aiohttp.ClientSession()
             drone = self.drones[node_id]
-            drone.set_session(self.http_session)
+            drone.set_session(http_session)
             drone_tasks.append(asyncio.create_task(drone.goto_initial_position()))
 
         await asyncio.gather(*drone_tasks)  
