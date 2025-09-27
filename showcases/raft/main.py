@@ -3,13 +3,25 @@
 # and executes consensus among them
 
 
+# Import the necessary general libraries
+import sys
+from pathlib import Path
+
+# Ensure project root is on sys.path when running as a script
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 # Import the necessary Gradysim libraries, the protocol of the nodes and other necessary libraries
 from gradysim.simulator.handler.communication import CommunicationHandler, CommunicationMedium
 from gradysim.simulator.handler.mobility import MobilityHandler, MobilityConfiguration
 from gradysim.simulator.handler.timer import TimerHandler
 from gradysim.simulator.handler.visualization import VisualizationHandler, VisualizationConfiguration
 from gradysim.simulator.simulation import SimulationBuilder, SimulationConfiguration
-from protocol import RaftProtocol
+try:
+    from .protocol import RaftProtocol
+except ImportError:
+    from protocol import RaftProtocol
 import winsound
 import random
 
@@ -17,7 +29,7 @@ import random
 def main():
 
     # Simulation parameters
-    duration = 10 # Simulation duration in seconds
+    duration = 5 # Simulation duration in seconds
     debug = False # Simulation debug mode
     real_time = True # Simulation real time mode
     builder = SimulationBuilder(SimulationConfiguration(duration=duration, debug=debug, real_time=real_time))
@@ -40,28 +52,12 @@ def main():
     open_browser = True # Visualization open browser - True: open browser, False: do not open browser
     builder.add_handler(VisualizationHandler(VisualizationConfiguration(open_browser=open_browser, )))
 
-    # Define node positions for 4 clusters (10 nodes each)
-    cluster_positions = [
-        # Cluster 1: Top-left quadrant (-30 to -50, 30 to 50)
-        ((-50, 50), (-50, 50)),
-        # Cluster 2: Top-right quadrant (30 to 50, 30 to 50)  
-        ((-50, 50), (-50, 50)),
-        # Cluster 3: Bottom-left quadrant (-30 to -50, -30 to -50)
-        ((-50, 50), (-50, 50)),
-        # Cluster 4: Bottom-right quadrant (30 to 50, -30 to -50)
-        ((-50, 50), (-50, 50))
-    ]
-    
-    # Add 40 nodes distributed across 4 clusters
-    nodes_per_cluster = 10
-    for cluster_idx, ((x_min, x_max), (y_min, y_max)) in enumerate(cluster_positions):
-        start_idx = cluster_idx * nodes_per_cluster
-        end_idx = start_idx + nodes_per_cluster
-        
-        for i in range(start_idx, end_idx):
-            x = random.uniform(x_min, x_max)
-            y = random.uniform(y_min, y_max)
-            builder.add_node(RaftProtocol, (x, y, 0))
+    # Add 40 nodes at random positions between -50 and +50
+    num_nodes = 40
+    for i in range(num_nodes):
+        x = random.uniform(-50, 50)
+        y = random.uniform(-50, 50)
+        builder.add_node(RaftProtocol, (x, y, 0))
 
     simulation = builder.build()
     simulation.start_simulation()
