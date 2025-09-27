@@ -12,12 +12,15 @@ to integrate Raft consensus into their Gradysim protocols.
 import logging
 from typing import Any, Callable, Dict, List, Optional, Set, Type
 
-from .adapters import GradysimAdapter
 from .raft_config import RaftConfig
 from .raft_node import RaftNode
 from .raft_state import RaftState
 from ..dispatcher import create_dispatcher, DispatchReturn
+from ...messages.communication import CommunicationCommand, CommunicationCommandType
 from ...interface import IProtocol
+
+# This prefix is used to avoid conflicts with other plugins.
+RAFT_DISPATCH_PREFIX = "__RAFT__"
 
 class RaftConsensusPlugin:
     """
@@ -46,139 +49,169 @@ class RaftConsensusPlugin:
         config.add_consensus_variable("leader_position", str)
         config.set_logging(enable=True, level="INFO")
         
-        # 2. Create adapter
-        adapter = GradysimAdapter(provider)
+        # 2. Create consensus instance (simplified)
+        consensus = RaftConsensus(config=config, protocol=protocol)
         
-        # 3. Create consensus instance (simplified)
-        consensus = RaftConsensus(config=config, adapter=adapter)
-        
-        # 4. Set known nodes and start consensus
+        # 3. Set known nodes and start consensus
         consensus.set_known_nodes([1, 2, 3, 4, 5])
         consensus.start()
         
-        # 5. Propose values (only works if this node is leader)
+        # 4. Propose values (only works if this node is leader)
         if consensus.is_leader():
             consensus.propose_value("sequence", 42)
             consensus.propose_value("leader_position", "north")
         
-        # 6. Get committed values
+        # 5. Get committed values
         sequence_value = consensus.get_committed_value("sequence")
         position_value = consensus.get_committed_value("leader_position")
         
-        # 7. Get all committed values
+        # 6. Get all committed values
         all_values = consensus.get_all_committed_values()
         
-        # 8. Check consensus state
+        # 7. Check consensus state
         is_leader = consensus.is_leader()
         leader_id = consensus.get_leader_id()
         current_term = consensus.get_current_term()
         current_state = consensus.get_current_state()
         
-        # 9. Handle messages and timers (call these from your protocol)
+        # 8. Handle messages and timers (call these from your protocol)
         consensus.handle_message(message_str)
         consensus.handle_timer("heartbeat")
         consensus.handle_timer("election")
         
-        # 10. Get statistics and information
+        # 9. Get statistics and information
         stats = consensus.get_statistics()
         state_info = consensus.get_state_info()
         config_info = consensus.get_configuration()
         
-        # 11. Check if system is ready
+        # 10. Check if system is ready
         if consensus.is_ready():
             print("Consensus system is ready")
         
-        # 12. Check failure detection (if enabled)
+        # 11. Check failure detection (if enabled)
         failed_nodes = consensus.get_failed_nodes()
         active_nodes = consensus.get_active_nodes()
         if consensus.is_node_failed(3):
             print("Node 3 is currently failed")
         
-        # 13. Stop consensus when done
+        # 12. Stop consensus when done
         consensus.stop()
     """
     
     def __init__(self, config: RaftConfig, protocol: IProtocol):
-        """
-        Initialize Raft consensus.
-        
-        Args:
-            config: Raft configuration
-            protocol: The protocol instance using this consensus
-            
-        Raises:
-            ValueError: If configuration is invalid
-            
-        Example:
-            # Simple usage with adapter (recommended):
-            consensus = RaftConsensus(config=config, adapter=adapter)
-            
-            # Alternative: Create adapter inline
-            adapter = GradysimAdapter(provider)
-            consensus = RaftConsensus(config=config, adapter=adapter)
-        """
-        # Validate configuration
+        """Initialize Raft consensus plugin with Gradysim protocol provider."""
         errors = config.validate()
         if errors:
             raise ValueError(f"Invalid configuration: {'; '.join(errors)}")
 
-        adapter = GradysimAdapter(protocol.provider, protocol)
-
-        # Validate adapter has required methods
-        self._validate_adapter(adapter)
-
-        # Get callbacks from adapter
-        callbacks = adapter.get_callbacks()
-        get_node_id_callback = callbacks.get('get_node_id_callback')
-
-        # Store adapter for potential future use
-        self.adapter = adapter
-
-        # Get node_id from adapter
-        try:
-            self.node_id = get_node_id_callback()
-        except Exception as e:
-            raise ValueError(f"Failed to get node ID from adapter: {e}")
-        
         self.config = config
-        self._get_node_id_callback = get_node_id_callback
-        
-        # Create internal Raft node
+        self._protocol = protocol
+        self._provider = protocol.provider
+        self._dispatch_header = f"{RAFT_DISPATCH_PREFIX}:"
+
+        self._validate_provider()
+
+        self._get_node_id_callback: Optional[Callable[[], int]] = getattr(self._provider, "get_id", None)
+        if self._get_node_id_callback is None:
+            raise ValueError("Protocol provider must implement get_id() for RaftConsensusPlugin")
+
+        try:
+            self.node_id = self._get_node_id_callback()
+        except Exception as exc:
+            raise ValueError(f"Failed to get node ID from provider: {exc}") from exc
+
+        self.logger = logging.getLogger(f"RaftConsensus-{self.node_id}")
+        if config._enable_logging:
+            self.logger.setLevel(getattr(logging, config._log_level))
+
+        callbacks = self._build_callbacks()
+
         self._raft_node = RaftNode(
             node_id=self.node_id,
             config=config,
             callbacks=callbacks
         )
-        
-        # Logging
-        self.logger = logging.getLogger(f"RaftConsensus-{self.node_id}")
-        if config._enable_logging:
-            self.logger.setLevel(getattr(logging, config._log_level))
 
-        # Initializing dispatcher for protocol events
         self._dispatcher = create_dispatcher(protocol)
 
         self.configure_handle_message()
         self.configure_handle_timer()
 
         self.logger.info(f"RaftConsensus initialized for node {self.node_id}")
-    
-    def _validate_adapter(self, adapter):
-        """Validate that adapter has all required methods."""
-        required_methods = ['send_message', 'schedule_timer', 'cancel_timer', 'get_current_time']
-        missing_methods = []
-        
-        for method in required_methods:
-            if not hasattr(adapter, method):
-                missing_methods.append(method)
-        
-        if missing_methods:
-            raise ValueError(f"Adapter missing required methods: {missing_methods}")
-        
-        # Check if adapter has get_callbacks method
-        if not hasattr(adapter, 'get_callbacks'):
-            raise ValueError("Adapter must have get_callbacks() method")
-    
+
+    def _validate_provider(self) -> None:
+        """Ensure the protocol provider exposes the expected Gradysim hooks."""
+        required_methods = ["send_communication_command", "schedule_timer", "cancel_timer", "current_time"]
+        missing = [name for name in required_methods if not callable(getattr(self._provider, name, None))]
+        if missing:
+            raise ValueError(f"Protocol provider missing required methods: {missing}")
+
+    def _build_callbacks(self) -> Dict[str, Callable[..., Any]]:
+        """Create callbacks consumed by the internal Raft node."""
+        return {
+            "send_message_callback": self._send_message,
+            "send_broadcast_callback": self._send_broadcast,
+            "schedule_timer_callback": self._schedule_timer,
+            "cancel_timer_callback": self._cancel_timer,
+            "get_current_time_callback": self._get_current_time
+        }
+
+    def _add_dispatch_prefix(self, value: str) -> str:
+        """Attach the RAFT dispatcher prefix to timer and message identifiers."""
+        value_str = str(value)
+        if value_str.startswith(self._dispatch_header):
+            return value_str
+        return f"{self._dispatch_header}{value_str}"
+
+    def _strip_dispatch_prefix(self, value: str) -> Optional[str]:
+        """Remove the RAFT dispatcher prefix; return None if it is not present."""
+        if not isinstance(value, str) or not value.startswith(self._dispatch_header):
+            return None
+        return value[len(self._dispatch_header):]
+
+    def _send_message(self, message: str, target_id: int) -> None:
+        """Send point-to-point RAFT messages through the provider."""
+        try:
+            payload = self._add_dispatch_prefix(message)
+            command = CommunicationCommand(CommunicationCommandType.SEND, payload, target_id)
+            self._provider.send_communication_command(command)
+        except Exception as exc:
+            self.logger.error("Error sending RAFT message to node %s: %s", target_id, exc)
+
+    def _send_broadcast(self, message: str) -> None:
+        """Broadcast RAFT messages through the provider."""
+        try:
+            payload = self._add_dispatch_prefix(message)
+            command = CommunicationCommand(CommunicationCommandType.BROADCAST, payload)
+            self._provider.send_communication_command(command)
+        except Exception as exc:
+            self.logger.error("Error broadcasting RAFT message: %s", exc)
+
+    def _schedule_timer(self, timer_name: str, delay_ms: int) -> None:
+        """Schedule RAFT timers using Gradysim's timing service."""
+        prefixed_timer = self._add_dispatch_prefix(timer_name)
+        try:
+            delay_seconds = delay_ms / 1000.0
+            absolute_time = self._provider.current_time() + delay_seconds
+            self._provider.schedule_timer(prefixed_timer, absolute_time)
+        except Exception as exc:
+            self.logger.error("Error scheduling RAFT timer '%s': %s", timer_name, exc)
+
+    def _cancel_timer(self, timer_name: str) -> None:
+        """Cancel RAFT timers previously scheduled through the provider."""
+        prefixed_timer = self._add_dispatch_prefix(timer_name)
+        try:
+            self._provider.cancel_timer(prefixed_timer)
+        except Exception as exc:
+            self.logger.error("Error canceling RAFT timer '%s': %s", timer_name, exc)
+
+    def _get_current_time(self) -> float:
+        """Expose the provider current time as required by the Raft node."""
+        try:
+            return float(self._provider.current_time())
+        except Exception as exc:
+            raise RuntimeError(f"Failed to get simulation time: {exc}") from exc
+
     def get_node_id(self) -> int:
         """
         Get the current node ID.
@@ -301,27 +334,26 @@ class RaftConsensusPlugin:
         return self._raft_node.state
     
     def configure_handle_message(self) -> None:
-        """
-        Handle incoming message with automatic sender_id extraction.
-        
-        This method automatically extracts the sender_id from the message JSON,
-        making it simpler to use. The message should contain a "sender_id" field.
-        If the sender_id cannot be extracted, it defaults to 0.
-        """
+        """Intercept RAFT packets and route them to the internal node."""
         def handle_message(_instance: IProtocol, message_str: str) -> DispatchReturn:
-            try:
-                import json
-                data = json.loads(message_str)
-                sender_id = data.get("sender_id", 0)
-                self._raft_node.handle_message(message_str, sender_id)
-            except (json.JSONDecodeError, KeyError, TypeError):
-                # If parsing fails, assume sender is 0
-                self._raft_node.handle_message(message_str, 0)
-            finally:
+            payload = self._strip_dispatch_prefix(message_str)
+            if payload is None:
                 return DispatchReturn.CONTINUE
 
+            import json
+
+            sender_id = 0
+            try:
+                data = json.loads(payload)
+                sender_id = data.get("sender_id", 0)
+            except (json.JSONDecodeError, TypeError, AttributeError):
+                pass
+
+            self._raft_node.handle_message(payload, sender_id)
+            return DispatchReturn.INTERRUPT
+
         self._dispatcher.register_handle_packet(handle_message)
-    
+
     def send_broadcast(self, message: str) -> None:
         """
         Send broadcast message to all nodes.
@@ -342,38 +374,39 @@ class RaftConsensusPlugin:
                     self._raft_node._send_message(message, node_id)
     
     def configure_handle_timer(self) -> None:
-        """
-        Handle timer expiration.
-        
-        This method should be called whenever a timer expires. The timer
-        will be processed according to the Raft protocol.
-        """
+        """Intercept RAFT timers created by the plugin."""
         def handle_timer(_instance: IProtocol, timer_name: str) -> DispatchReturn:
-            self._raft_node.handle_timer(timer_name)
-            return DispatchReturn.CONTINUE
+            payload = self._strip_dispatch_prefix(timer_name)
+            if payload is None:
+                return DispatchReturn.CONTINUE
+
+            self._raft_node.handle_timer(payload)
+            return DispatchReturn.INTERRUPT
         self._dispatcher.register_handle_timer(handle_timer)
 
     def set_known_nodes(self, node_ids: List[int]) -> None:
         """
         Set the list of known node IDs.
-        
+
         This method should be called to inform the consensus system about
         all nodes in the cluster. This information is used for sending
         messages during elections and heartbeats.
-        
+
         Args:
             node_ids: List of all node IDs in the cluster
         """
         self._raft_node.set_known_nodes(node_ids)
-        
-        # Connect failure detector to adapter for connectivity-based failure detection
-        if hasattr(self._raft_node, '_heartbeat_detector') and self._raft_node._heartbeat_detector:
-            if hasattr(self.adapter, 'set_failure_detector'):
-                self.adapter.set_failure_detector(self._raft_node._heartbeat_detector)
-                self.logger.info("Connected failure detector to adapter for connectivity-based failure detection")
-        
+
+        detector = getattr(self._raft_node, '_heartbeat_detector', None)
+        if detector and hasattr(self._provider, 'set_failure_detector'):
+            try:
+                self._provider.set_failure_detector(detector)
+                self.logger.info('Connected failure detector to provider for connectivity-based failure detection')
+            except Exception as exc:
+                self.logger.warning('Failed to connect failure detector via provider: %s', exc)
+
         self.logger.info(f"Set known nodes: {node_ids}")
-    
+
     def get_state_info(self) -> Dict[str, Any]:
         """
         Get current state information for debugging.
