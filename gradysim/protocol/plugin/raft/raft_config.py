@@ -19,8 +19,13 @@ class RaftMode(Enum):
     """
     Enumeration for Raft operation modes.
     
-    CLASSIC: Classic Raft mode - uses fixed cluster size for all calculations
-    FAULT_TOLERANT: Fault-tolerant Raft mode - uses active node count for majority calculations
+    CLASSIC: Classic Raft mode 
+    
+    - uses fixed cluster size for all calculations
+
+    FAULT_TOLERANT: Fault-tolerant Raft mode 
+    
+    - uses active node count for majority calculations
     """
     CLASSIC = "classic"
     FAULT_TOLERANT = "fault_tolerant"
@@ -31,16 +36,25 @@ class RaftConfig:
     Configuration class for Raft consensus using Builder pattern.
     
     Provides a fluent interface for configuring all aspects of Raft consensus:
+
     - Election timeouts
+
     - Heartbeat intervals
+
     - Consensus variables
+
     - Logging options
     
     Example:
+
         config = RaftConfig()
+        
         config.set_election_timeout(150, 300)
+
         config.set_heartbeat_interval(50)
+
         config.add_consensus_variable("sequence", int)
+
         config.set_logging(True, "INFO")
     """
     

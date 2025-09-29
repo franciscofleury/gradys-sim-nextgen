@@ -159,11 +159,4 @@ protocols in a more realistic environment.
     also find instructions in how to use it. In the past this project was hosted
     in a separate repository. You can find it 
     [here](https://github.com/Thlamz/MAVSIMNET).
-[33mcommit ee6a2bbcfb8252c39b539b2223f01f05b8493232[m
-Author: Thiago Lamenza <thlamenza@hotmail.com>
-Date:   Sat Aug 23 13:29:48 2025 -0300
 
-    Integrating dispatcher into protocol
-
- gradysim/protocol/plugin/raft/raft_consensus.py | 48 [32m++++++++++++++[m[31m-----------[m
- 1 file changed, 28 insertions(+), 20 deletions(-)

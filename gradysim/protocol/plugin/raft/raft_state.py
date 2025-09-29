@@ -25,9 +25,13 @@ class RaftState(Enum):
     Follower state - Default state for all nodes.
     
     Responsibilities:
+
     - Respond to requests from leaders and candidates
+
     - Start election if election timeout elapses
+
     - Vote for candidates during elections
+    
     - Accept log entries from leader
     """
     
@@ -36,10 +40,15 @@ class RaftState(Enum):
     Candidate state - Used during leader election.
     
     Responsibilities:
+
     - Increment current term
+
     - Vote for self
+
     - Request votes from other nodes
+
     - Become leader if majority votes received
+
     - Return to follower if another leader discovered
     """
     
@@ -48,10 +57,15 @@ class RaftState(Enum):
     Leader state - Handles all client requests and log replication.
     
     Responsibilities:
+
     - Send periodic heartbeats to all followers
+
     - Handle client requests
+
     - Replicate log entries to followers
+
     - Commit entries when majority replicated
+
     - Step down if higher term discovered
     """
     

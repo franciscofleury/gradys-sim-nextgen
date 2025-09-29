@@ -20,7 +20,7 @@
     
     
       
-        <title>RAFT Consensus Plugin Guide - GrADyS-SIM NextGen</title>
+        <title>RAFT Consensus Plugin - GrADyS-SIM NextGen</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#raft-consensus-plugin-guide" class="md-skip">
+        <a href="#raft-consensus-plugin" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RAFT Consensus Plugin Guide
+              RAFT Consensus Plugin
             
           </span>
         </div>
@@ -486,7 +486,7 @@
   
   
   <span class="md-ellipsis">
-    RAFT Consensus Plugin Guide
+    RAFT Consensus Plugin
     
   </span>
   
@@ -499,7 +499,7 @@
   
   
   <span class="md-ellipsis">
-    RAFT Consensus Plugin Guide
+    RAFT Consensus Plugin
     
   </span>
   
@@ -1857,7 +1857,7 @@
   
   
   <span class="md-ellipsis">
-    RAFT Consensus Plugin
+    RAFT Consensus
     
   </span>
   
@@ -3153,7 +3153,7 @@
   
 
 
-<h1 id="raft-consensus-plugin-guide">RAFT Consensus Plugin Guide</h1>
+<h1 id="raft-consensus-plugin">RAFT Consensus Plugin</h1>
 <p>The RAFT consensus plugin ships with GrADyS-SIM NextGen and provides a fault-tolerant coordination layer for protocols that need to agree on shared values. This guide walks through the essentials for configuring the plugin, wiring it into a protocol, and validating the showcase scenario.</p>
 <h2 id="key-capabilities">Key Capabilities</h2>
 <ul>
@@ -3317,33 +3317,83 @@
 <p>The RAFT plugin supports two distinct operation modes, allowing you to choose between classic Raft behavior and fault-tolerant enhancements:</p>
 <h4 id="classic-raft-mode-raftmodeclassic"><strong>Classic Raft Mode (<code>RaftMode.CLASSIC</code>)</strong></h4>
 <p>Classic Raft Mode implements the standard Raft protocol as specified by Ongaro and Ousterhout. The only divergence in our system is replication: the plugin targets agreement on consensus values rather than maintaining a replicated log.</p>
-<p><strong>Characteristics:</strong>
-- <strong>Fixed Cluster Size</strong>: Uses total known nodes for all majority calculations
-- <strong>Direct Elections</strong>: No discovery phase - immediate election on timeout
-- <strong>Standard Behavior</strong>: Classic Raft consensus semantics
-- <strong>Better Performance</strong>: Lower overhead (no discovery phase)
-- <strong>Deterministic</strong>: Predictable behavior for static clusters
-- <strong>Manual Failure Handling</strong>: Requires manual cluster reconfiguration after failures</p>
-<p><strong>Use Cases:</strong>
-- Static clusters with fixed, known node count
-- Environments where performance is critical
-- Systems requiring standard Raft semantics
-- Scenarios with manual failure management</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>
+<p><strong>Fixed Cluster Size</strong>: Uses total known nodes for all majority calculations</p>
+</li>
+<li>
+<p><strong>Direct Elections</strong>: No discovery phase - immediate election on timeout</p>
+</li>
+<li>
+<p><strong>Standard Behavior</strong>: Classic Raft consensus semantics</p>
+</li>
+<li>
+<p><strong>Better Performance</strong>: Lower overhead (no discovery phase)</p>
+</li>
+<li>
+<p><strong>Deterministic</strong>: Predictable behavior for static clusters</p>
+</li>
+<li>
+<p><strong>Manual Failure Handling</strong>: Requires manual cluster reconfiguration after failures</p>
+</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>
+<p>Static clusters with fixed, known node count</p>
+</li>
+<li>
+<p>Environments where performance is critical</p>
+</li>
+<li>
+<p>Systems requiring standard Raft semantics</p>
+</li>
+<li>
+<p>Scenarios with manual failure management</p>
+</li>
+</ul>
 <h4 id="fault-tolerant-raft-mode-raftmodefault_tolerant"><strong>Fault-Tolerant Raft Mode (<code>RaftMode.FAULT_TOLERANT</code>)</strong></h4>
 <p>Enhanced Raft implementation with automatic fault tolerance and dynamic cluster adaptation.</p>
-<p><strong>Characteristics:</strong>
-- <strong>Dynamic Active Node Detection</strong>: Discovery phase before elections
-- <strong>Adaptive Majority Calculation</strong>: Uses active node count for thresholds
-- <strong>Massive Failure Recovery</strong>: Automatic recovery from massive quantity of node failures
-- <strong>Self-Healing</strong>: Automatic adaptation to cluster changes
-- <strong>Fault Tolerance</strong>: No manual intervention needed
-- <strong>Active Node Information</strong>: Real-time access to node information
-- <strong>Discovery Overhead</strong>: Small performance cost for discovery phase</p>
-<p><strong>Use Cases:</strong>
-- Dynamic environments with node failures
-- Distributed systems requiring high availability
-- Scenarios with unpredictable node failures
-- Systems that need automatic fault recovery</p>
+<p><strong>Characteristics:</strong></p>
+<ul>
+<li>
+<p><strong>Dynamic Active Node Detection</strong>: Discovery phase before elections</p>
+</li>
+<li>
+<p><strong>Adaptive Majority Calculation</strong>: Uses active node count for thresholds</p>
+</li>
+<li>
+<p><strong>Massive Failure Recovery</strong>: Automatic recovery from massive quantity of node failures</p>
+</li>
+<li>
+<p><strong>Self-Healing</strong>: Automatic adaptation to cluster changes</p>
+</li>
+<li>
+<p><strong>Fault Tolerance</strong>: No manual intervention needed</p>
+</li>
+<li>
+<p><strong>Active Node Information</strong>: Real-time access to node information</p>
+</li>
+<li>
+<p><strong>Discovery Overhead</strong>: Small performance cost for discovery phase</p>
+</li>
+</ul>
+<p><strong>Use Cases:</strong></p>
+<ul>
+<li>
+<p>Dynamic environments with node failures</p>
+</li>
+<li>
+<p>Distributed systems requiring high availability</p>
+</li>
+<li>
+<p>Scenarios with unpredictable node failures</p>
+</li>
+<li>
+<p>Systems that need automatic fault recovery</p>
+</li>
+</ul>
 <h4 id="mode-comparison"><strong>Mode Comparison</strong></h4>
 <table>
 <thead>

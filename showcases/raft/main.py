@@ -22,7 +22,7 @@ try:
     from .protocol import RaftProtocol
 except ImportError:
     from protocol import RaftProtocol
-import winsound
+
 import random
 
 # Main function to execute the simulation
@@ -62,8 +62,6 @@ def main():
     simulation = builder.build()
     simulation.start_simulation()
 
-    # Beep when the simulation ends
-    winsound.Beep(1000, 2000)
 
 if __name__ == "__main__":
     main() 

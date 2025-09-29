@@ -5,14 +5,21 @@ This module provides distributed consensus capabilities using the RAFT algorithm
 It enables protocols to reach agreement on shared values in a fault-tolerant manner.
 
 Key Features:
+
 - Fault-tolerant consensus with node failure handling
+
 - Active node discovery for dynamic majority calculations
+
 - Heartbeat-based failure detection
+
 - Dual operation modes (Classic and Fault-Tolerant)
+
 - Seamless integration with GrADyS-SIM protocols
+
 - Consensus variables instead of traditional log replication
 
 Example:
+
     from gradysim.protocol.plugin.raft import RaftConfig, RaftMode, RaftConsensusPlugin
     
     # Configure consensus
