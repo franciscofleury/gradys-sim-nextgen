@@ -1,4 +1,4 @@
-# RAFT Consensus Plugin Guide
+# RAFT Consensus Plugin
 
 The RAFT consensus plugin ships with GrADyS-SIM NextGen and provides a fault-tolerant coordination layer for protocols that need to agree on shared values. This guide walks through the essentials for configuring the plugin, wiring it into a protocol, and validating the showcase scenario.
 
@@ -90,23 +90,24 @@ The plugin automatically prefixes every internal message and timer with `__RAFT_
 ### **Component Relationships**
 
 ```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│ RaftConsensus   │    │    RaftNode     │    │   GradySim      │
-│   (Facade)      │◄──►│   (Core Logic)  │◄──►│   (Platform)    │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-         │                       │                       │
-         ▼                       ▼                       ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   RaftConfig    │    │HeartbeatDetector│    │   Simulation    │
-│   (Settings)    │    │   (Internal)    │    │   Framework     │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+   RaftConsensus           RaftNode            GradySim      
+     (Facade)     ◄──►   (Core Logic)  ◄──►    (Platform)    
+         │                     │                  │
+         ▼                     ▼                  ▼
+   RaftConfig          HeartbeatDetector       Simulation    
+   (Settings)             (Internal)           Framework     
 ```
 
 **Component Relationships:**
+
 - **RaftConsensus**: Public facade for consensus operations
+
 - **RaftNode**: Core Raft algorithm implementation
+
 - **GradySim**: Simulation framework integration
+
 - **RaftConfig**: Configuration and settings management
+
 - **HeartbeatDetector**: Internal failure detection (Fault-Tolerant mode only)
 
 ### **Message Flow**
@@ -133,9 +134,13 @@ majority = (discovered_active // 2) + 1     # Uses actual active nodes
 ```
 
 **Benefits:**
+
 - **Accurate majority calculations** after failures
+
 - **Faster leader election** with correct thresholds
+
 - **Automatic adaptation** to cluster changes
+
 - **No manual configuration** needed
 
 #### **2. Massive Failure Recovery**
@@ -176,8 +181,13 @@ def handle_timer(self, timer: str) -> None:
 
 ### Election and Heartbeat
 
-- `set_election_timeout(min_ms, max_ms)`: random election timeout window. Typical values are 150-300 ms.
-- `set_heartbeat_interval(interval_ms)`: heartbeat cadence. Keep it well below the election timeout (for example 50 ms).
+- `set_election_timeout(min_ms, max_ms)`: 
+
+random election timeout window. Typical values are 150-300 ms.
+
+- `set_heartbeat_interval(interval_ms)`: 
+
+heartbeat cadence. Keep it well below the election timeout (for example 50 ms).
 
 ### Consensus Variables
 
@@ -192,9 +202,13 @@ config.add_consensus_variable("is_active", bool)
 ```
 
 **Supported Variable Types:**
+
 - **Primitive Types**: `int`, `float`, `str`, `bool`
+
 - **Complex Types**: `dict`, `list`, `tuple`
+
 - **None Values**: `None` is also supported
+
 - **Custom Objects**: Any object that can be JSON serialized
 
 Committed values are available through `get_committed_value(name)` or `get_all_committed_values()`.
@@ -208,17 +222,27 @@ The RAFT plugin supports two distinct operation modes, allowing you to choose be
 Classic Raft Mode implements the standard Raft protocol as specified by Ongaro and Ousterhout. The only divergence in our system is replication: the plugin targets agreement on consensus values rather than maintaining a replicated log.
 
 **Characteristics:**
+
 - **Fixed Cluster Size**: Uses total known nodes for all majority calculations
+
 - **Direct Elections**: No discovery phase - immediate election on timeout
+
 - **Standard Behavior**: Classic Raft consensus semantics
+
 - **Better Performance**: Lower overhead (no discovery phase)
+
 - **Deterministic**: Predictable behavior for static clusters
+
 - **Manual Failure Handling**: Requires manual cluster reconfiguration after failures
 
 **Use Cases:**
+
 - Static clusters with fixed, known node count
+
 - Environments where performance is critical
+
 - Systems requiring standard Raft semantics
+
 - Scenarios with manual failure management
 
 #### **Fault-Tolerant Raft Mode (`RaftMode.FAULT_TOLERANT`)**
@@ -226,18 +250,29 @@ Classic Raft Mode implements the standard Raft protocol as specified by Ongaro a
 Enhanced Raft implementation with automatic fault tolerance and dynamic cluster adaptation.
 
 **Characteristics:**
+
 - **Dynamic Active Node Detection**: Discovery phase before elections
+
 - **Adaptive Majority Calculation**: Uses active node count for thresholds
+
 - **Massive Failure Recovery**: Automatic recovery from massive quantity of node failures
+
 - **Self-Healing**: Automatic adaptation to cluster changes
+
 - **Fault Tolerance**: No manual intervention needed
+
 - **Active Node Information**: Real-time access to node information
+
 - **Discovery Overhead**: Small performance cost for discovery phase
 
 **Use Cases:**
+
 - Dynamic environments with node failures
+
 - Distributed systems requiring high availability
+
 - Scenarios with unpredictable node failures
+
 - Systems that need automatic fault recovery
 
 #### **Mode Comparison**

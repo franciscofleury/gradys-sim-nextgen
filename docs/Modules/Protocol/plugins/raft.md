@@ -1,3 +1,3 @@
-# RAFT Consensus Plugin
+# RAFT Consensus
 
 :::gradysim.protocol.plugin.raft

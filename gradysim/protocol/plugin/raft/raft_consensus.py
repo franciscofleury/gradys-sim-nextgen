@@ -544,13 +544,19 @@ class RaftConsensusPlugin:
         Works in both CLASSIC and FAULT_TOLERANT modes with appropriate behavior for each:
         
         **CLASSIC mode:**
+
         - All known nodes are considered active (no failure detection)
+
         - Returns information based on the complete known node list
         
         **FAULT_TOLERANT mode:**
+
         - Uses actual failure detection to determine active nodes
+
         - Information accuracy differs by node role:
+
           * Leader: Complete and accurate active nodes information from heartbeat detection
+          
           * Follower/Candidate: Active count from leader + limited local node knowledge
         
         Can be called on any node (leader, candidate, or follower) in any mode.
