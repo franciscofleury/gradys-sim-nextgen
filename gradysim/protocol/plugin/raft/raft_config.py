@@ -9,7 +9,7 @@ This module implements the Builder pattern to provide a fluent interface for
 configuring Raft consensus parameters.
 """
 
-from typing import Any, Dict, List, Optional, Tuple, Type
+from typing import Any, Dict, List, Optional, Type
 import random
 from .failure_detection import FailureConfig
 from enum import Enum

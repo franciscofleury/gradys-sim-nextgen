@@ -7,8 +7,7 @@ This module implements heartbeat-based failure detection for Raft nodes.
 import logging
 from typing import Callable, Dict, Set, Optional, Any
 from .failure_config import FailureConfig
-from .failure_state import FailureState, NodeStatus
-import time
+from .failure_state import FailureState
 
 
 class HeartbeatDetector:

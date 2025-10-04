@@ -5,6 +5,7 @@
 
 # Import the necessary general libraries
 import sys
+import random
 from pathlib import Path
 
 # Ensure project root is on sys.path when running as a script
@@ -13,17 +14,15 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 # Import the necessary Gradysim libraries, the protocol of the nodes and other necessary libraries
-from gradysim.simulator.handler.communication import CommunicationHandler, CommunicationMedium
-from gradysim.simulator.handler.mobility import MobilityHandler, MobilityConfiguration
-from gradysim.simulator.handler.timer import TimerHandler
-from gradysim.simulator.handler.visualization import VisualizationHandler, VisualizationConfiguration
-from gradysim.simulator.simulation import SimulationBuilder, SimulationConfiguration
+from gradysim.simulator.handler.communication import CommunicationHandler, CommunicationMedium  # noqa: E402
+from gradysim.simulator.handler.mobility import MobilityHandler, MobilityConfiguration  # noqa: E402
+from gradysim.simulator.handler.timer import TimerHandler  # noqa: E402
+from gradysim.simulator.handler.visualization import VisualizationHandler, VisualizationConfiguration  # noqa: E402
+from gradysim.simulator.simulation import SimulationBuilder, SimulationConfiguration  # noqa: E402
 try:
-    from .protocol import RaftProtocol
+    from .protocol import RaftProtocol  # noqa: E402
 except ImportError:
-    from protocol import RaftProtocol
-
-import random
+    from protocol import RaftProtocol  # noqa: E402
 
 # Main function to execute the simulation
 def main():

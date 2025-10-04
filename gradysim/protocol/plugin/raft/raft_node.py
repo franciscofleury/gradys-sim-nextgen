@@ -13,9 +13,7 @@ all the low-level Raft protocol operations.
 """
 
 import logging
-import random
-import time
-from typing import Any, Callable, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set
 from collections import defaultdict
 
 from .raft_state import RaftState
@@ -311,7 +309,7 @@ class RaftNode:
         if self._send_message_callback is not None:
             self._send_message_callback(message_str, target_id)
         else:
-            self.logger.warning(f"No send_message callback available")
+            self.logger.warning("No send_message callback available")
     
     def handle_timer(self, timer_name: str) -> None:
         """
@@ -657,15 +655,15 @@ class RaftNode:
         """Handle election timeout."""
         # In classic mode, skip discovery and start election directly
         if self.config.is_classic_mode():
-            self.logger.info(f"Election timeout, starting election directly (classic mode)")
+            self.logger.info("Election timeout, starting election directly (classic mode)")
             self._start_election()
         else:
             # Fault-tolerant mode: use discovery if needed
             if not self._is_active_count_fresh():
-                self.logger.info(f"Election timeout, starting discovery before election")
+                self.logger.info("Election timeout, starting discovery before election")
                 self._discover_active_nodes_before_election()
             else:
-                self.logger.info(f"Election timeout, starting election directly (active count is fresh)")
+                self.logger.info("Election timeout, starting election directly (active count is fresh)")
                 self._start_election()
     
     def _handle_heartbeat_timeout(self) -> None:
@@ -716,14 +714,14 @@ class RaftNode:
         # Use broadcast if available, otherwise use individual messages
         if self._send_broadcast is not None:
             self._send_broadcast(message_str)
-            self.logger.info(f"Sent vote request broadcast for term {self.current_term}")
+            self.logger.info("Sent vote request broadcast for term %s", self.current_term)
         else:
             # Send individual messages to all nodes except self
             for node_id in target_nodes:
                 if node_id != self.node_id:
                     self._send_message(message_str, node_id)
                     self.logger.info(f"Sent vote request to node {node_id}")
-            self.logger.info(f"Sent vote requests for term {self.current_term} to all nodes")
+            self.logger.info("Sent vote requests for term %s to all nodes", self.current_term)
     
     def _send_append_entries(self) -> None:
         """Send append entries to all followers."""
@@ -782,7 +780,7 @@ class RaftNode:
             
             # Only log if there are consensus values to propagate (not just heartbeats)
             if self.consensus_values:
-                self.logger.info(f"Sent append entries for term {self.current_term} to all nodes with {active_count} active nodes")
+                self.logger.info("Sent append entries for term %s to all nodes with %s active nodes", self.current_term, active_count)
         
         # Record heartbeat sent for failure detection
         if self._heartbeat_detector is not None:
@@ -1204,7 +1202,7 @@ class RaftNode:
             try:
                 detection_summary = self._heartbeat_detector.get_detection_summary()
                 result['detection_summary'] = detection_summary
-            except:
+            except Exception:
                 pass  # Detection summary might not be available
         else:
             result['failed_nodes'] = []
