@@ -4,7 +4,7 @@ Failure State Management
 This module manages the state of node failures in the Raft cluster.
 """
 
-from typing import Dict, Set, Optional
+from typing import Dict, Set
 from enum import Enum
 
 
