@@ -62,6 +62,12 @@ Simulations are capable of simulating the movement of nodes in a 3D space and
 the communication between nodes. The protocol interacts with the simulation
 environment through glue-code provided in the `encapsulator` package.
 
+The simulation also provides [extensions][gradysim.simulatior.extension] that
+enable you to modify and enhance the behaviour of the simulator. These
+extensions include different radio models, simulated hardware or others. It's
+important to note that unlike `plugins`, `extensions` work exclusively on the
+python simulated environment and cannot be used in other execution modes.
+
 !!!info
     Both the [creating a protocol](./Guides/1_creating.md) and the 
     [implementation of a simulation scenario](./Guides/1_creating.md) guides use
