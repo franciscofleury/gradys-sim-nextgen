@@ -1,7 +1,7 @@
 import unittest
 
 from gradysim.protocol.messages.telemetry import Telemetry
-from gradysim.protocol.plugin.radio import Radio, RadioConfiguration
+from gradysim.simulator.extension.radio import Radio, RadioConfiguration
 from gradysim.protocol.messages.communication import CommunicationCommand, CommunicationCommandType
 from gradysim.simulator.handler.communication import CommunicationHandler
 from gradysim.simulator.simulation import SimulationBuilder, SimulationConfiguration
