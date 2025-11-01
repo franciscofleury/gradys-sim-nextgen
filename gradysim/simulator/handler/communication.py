@@ -87,6 +87,19 @@ class CommunicationMedium:
     """Failure chance between 0 and 1 for message delivery. 0 represents messages never failing and 1 always fails."""
 
 
+def can_transmit(source_position: Position, destination_position: Position,
+                 medium: CommunicationMedium) -> bool:
+    squared_distance = (destination_position[0] - source_position[0]) ** 2 + \
+                       (destination_position[1] - source_position[1]) ** 2 + \
+                       (destination_position[2] - source_position[2]) ** 2
+    in_range = squared_distance <= medium.transmission_range ** 2
+
+    rng = True
+    if medium.failure_rate > 0:
+        rng = random.random() > medium.failure_rate
+    return rng and in_range
+
+
 class CommunicationHandler(INodeHandler):
     """
     Adds communication to the simulation. Nodes, through their providers, can
@@ -117,8 +130,7 @@ class CommunicationHandler(INodeHandler):
         self._sources: Dict[int, CommunicationSource] = {}
         self._destinations: Dict[int, CommunicationDestination] = {}
 
-        self.transmission_ranges: Dict[int, float] = {}
-        self.communication_medium = communication_medium
+        self.default_medium = communication_medium
 
     def inject(self, event_loop: EventLoop):
         self._injected = True
@@ -130,9 +142,11 @@ class CommunicationHandler(INodeHandler):
                                          "node handler")
         self._sources[node.id] = CommunicationSource(node)
         self._destinations[node.id] = CommunicationDestination(node)
-        self.transmission_ranges[node.id] = self.communication_medium.transmission_range
 
-    def handle_command(self, command: CommunicationCommand, sender: Node):
+    def handle_command(self,
+                       command: CommunicationCommand,
+                       sender: Node,
+                       medium: CommunicationMedium = None):
         """
         Performs a communication command. This method should be called by the node's
         provider to transmit a communication command to the communication handler.
@@ -140,6 +154,8 @@ class CommunicationHandler(INodeHandler):
         Args:
             command: Command being issued
             sender: Node issuing the command
+            medium: Optional communication medium to use for this specific command. If not set, the default medium
+                    of the handler will be used.
         """
         if sender.id == command.destination:
             raise CommunicationException("Error transmitting message: message destination is equal to sender. Try "
@@ -147,10 +163,14 @@ class CommunicationHandler(INodeHandler):
 
         source = self._sources[sender.id]
 
+        # Use the provided medium if available; otherwise fall back to the default handler medium
+        if medium is None:
+            medium = self.default_medium
+
         if command.command_type == CommunicationCommandType.BROADCAST:
             for destination, endpoint in self._destinations.items():
                 if destination != sender.id:
-                    self._transmit_message(command.message, source, endpoint)
+                    self._transmit_message(command.message, source, endpoint, medium)
         else:
             destination = command.destination
             if destination is None:
@@ -159,25 +179,17 @@ class CommunicationHandler(INodeHandler):
             if destination not in self._destinations:
                 raise CommunicationException(f"Error transmitting message: destination {destination} does not exist.")
 
-            self._transmit_message(command.message, source, self._destinations[destination])
+            self._transmit_message(command.message, source, self._destinations[destination], medium)
 
-    def can_transmit(self, source_position: Position, destination_position: Position,
-                     node: Node):
-        squared_distance = (destination_position[0] - source_position[0]) ** 2 + \
-                           (destination_position[1] - source_position[1]) ** 2 + \
-                           (destination_position[2] - source_position[2]) ** 2
-        in_range = squared_distance <= self.transmission_ranges[node.id] ** 2
-
-        rng = True
-        if self.communication_medium.failure_rate > 0:
-            rng = random.random() > self.communication_medium.failure_rate
-        return rng and in_range
-
-    def _transmit_message(self, message: str, source: CommunicationSource, destination: CommunicationDestination):
+    def _transmit_message(self, message: str, source: CommunicationSource, destination: CommunicationDestination,
+                          medium: CommunicationMedium):
+        """
+        Transmits a message from source to destination through the communication medium.
+        """
         source.hand_over_message(message, destination)
 
-        if self.can_transmit(source.node.position, destination.node.position, source.node):
-            if self.communication_medium.delay <= 0:
+        if can_transmit(source.node.position, destination.node.position, medium):
+            if medium.delay <= 0:
                 self._event_loop.schedule_event(
                     self._event_loop.current_time,
                     lambda: destination.receive_message(message, source),
@@ -185,7 +197,7 @@ class CommunicationHandler(INodeHandler):
                 )
             else:
                 self._event_loop.schedule_event(
-                    self._event_loop.current_time + self.communication_medium.delay,
+                    self._event_loop.current_time + medium.delay,
                     lambda: destination.receive_message(message, source),
                     label_node(destination.node) + " handle_packet"
                 )

@@ -1,12 +1,14 @@
-# Extending the Simulation
+# Extending the Simulation (Camera Extension)
 
-The simulation may not have all possible features that you need. We urge you to
-use the tools for extensibility provided by the simulator itself, instead of
-modifying the simulator code directly. This will make it easier to update the
-simulator to newer versions and sharing your creations with others.
+The simulation may not have all possible features that you need. Instead of
+directly modifying simulator code, you should implement 
+[extensions][gradysim.simulator.extension]. Extensions are modular pieces of code
+that can be plugged into the simulator to extend its functionality. 
 
-There are a few ways to extend the simulator. We are going to showcase them
-in this guide.
+!!!warn
+    Extensions only work in the python simulator. If you need to implement
+    functionality that works in other execution modes, consider using
+    [plugins][gradysim.protocol.plugin] instead.
 
 ## Extension Classes
 
@@ -15,13 +17,13 @@ protocol to interact directly with the simulation through an extension class.
 These classes have access to simulation internals and can modify them as needed.
 
 To be more specific, extension classes have access to 
-[handlers][gradysim.simulator.handler]; which are the classes that implement 
+[handlers][gradysim.simulator.handler], which are the classes that implement 
 parts of the simulation logic. Some examples of handlers are ones that 
 implement [mobility][gradysim.simulator.handler.mobility.MobilityHandler] or 
 [communication][gradysim.simulator.handler.communication.CommunicationHandler].
 
 To showcase how to create an extension class, we are going to analyze the code
-of one of our extension classes, the camera hardware. This extension class
+of one of our extension classes, the camera extension. This extension class
 implements a camera attached to a node that can "visually" detect other nodes'
 presence within it's field of view.
 
@@ -35,7 +37,7 @@ gradysim/simulator/extension/extension.py
 
 The base extension class is a simple class designed to be subclassed. It only
 a single method, the initializer itself. The initializer receives a protocol
-instance and, through its provider, acceses simulation internals. Beware that
+instance and, through its provider, accesses simulation internals. Beware that
 the protocol itself should no do this if you are interested in keeping your
 protocol code abstraction in order. The extension intentionally breaks the 
 abstraction layer to allow for mode flexibility.
