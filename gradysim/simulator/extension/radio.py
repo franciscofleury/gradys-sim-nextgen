@@ -3,17 +3,13 @@ This module declares a plugin for the protocol that allows a protocol to instant
 communication characteristics. This plugin is only available in a Python simulation environment and will raise an
 error if used in other environments. Alternative implementations should be provided for other simulation environments,
 """
-from dataclasses import dataclass
+import copy
+from typing import Optional
 
 from gradysim.encapsulator.python import PythonProvider
 from gradysim.protocol.interface import IProtocol
 from gradysim.protocol.messages.communication import CommunicationCommand
-from gradysim.simulator.extension.communication_controller import CommunicationController
-
-
-@dataclass
-class RadioConfiguration:
-    range: float
+from gradysim.simulator.handler.communication import CommunicationMedium, CommunicationHandler
 
 class Radio:
     """
@@ -30,39 +26,53 @@ class Radio:
     !!!warning
         This plugin can only be used in a Python simulation environment.
     """
+    _radio_medium: CommunicationMedium
+    _communication_handler: CommunicationHandler
 
-    def __init__(self, protocol: IProtocol, radio_configuration: RadioConfiguration):
+    def __init__(self, protocol: IProtocol):
         """
         Initializes the Radio plugin.
         """
-        self._radio_configuration = radio_configuration
 
         provider = protocol.provider
         if not isinstance(provider, PythonProvider):
             raise TypeError("Radio plugin can only be used in a Python simulation environment.")
         self._provider = provider
+        communication_handler: Optional[CommunicationHandler] = self._provider.handlers.get("communication")
+        if communication_handler is None or not isinstance(communication_handler, CommunicationHandler):
+            raise RuntimeError("The radio extension is only compatible with the Python Simulator and a "
+                               "CommunicationHandler has to be present")
 
-        self._communication_controller = CommunicationController(protocol)
+        self._communication_handler = communication_handler
 
-    def set_configuration(self, radio_configuration: RadioConfiguration) -> None:
+        self._radio_medium = copy.copy(self._communication_handler.default_medium)
+
+    def set_configuration(self,
+                          transmission_range: float = None,
+                          delay: float = None,
+                          failure_rate: float = None) -> None:
         """
-        Sets a new configuration for the radio.
+        Sets a new configuration for the radio. Any parameter set to None will keep its previous value.
 
         Args:
-            radio_configuration: The new configuration for the radio.
+            transmission_range: Maximum range in meters for message delivery. Messages destined to nodes outside this range will not be delivered.
+            delay: Sets a delay in seconds for message delivery, representing network delay. Range is evaluated before the delay is applied.
+            failure_rate: Failure chance between 0 and 1 for message delivery. 0 represents messages never failing and 1 always fails.
         """
-        self._radio_configuration = radio_configuration
+        if transmission_range is not None:
+            self._radio_medium.transmission_range = transmission_range
+        if delay is not None:
+            self._radio_medium.delay = delay
+        if failure_rate is not None:
+            self._radio_medium.failure_rate = failure_rate
 
     def send_communication_command(self, command: CommunicationCommand) -> None:
         """
-        Sends a message via the radio.
+        Sends a message via the radio. Messages sent through the radio function identically to those sent through
+        the provider, but will use the radio's communication characteristics.
 
         Args:
-            command: The communication command to send. Same CommunicationCommand used in [IProvider][gradysim.protocol.interface.IProvider]
+            command: The communication command to send. Same CommunicationCommand used
+                     in [IProvider][gradysim.protocol.interface.IProvider]
         """
-        previous_range = self._communication_controller.get_transmission_range()
-        if previous_range is None:
-            raise RuntimeError("Cannot use radio: No communication handler detected.")
-        self._communication_controller.set_transmission_range(self._radio_configuration.range)
-        self._provider.send_communication_command(command)
-        self._communication_controller.set_transmission_range(previous_range)
+        self._communication_handler.handle_command(command, self._provider.node, self._radio_medium)

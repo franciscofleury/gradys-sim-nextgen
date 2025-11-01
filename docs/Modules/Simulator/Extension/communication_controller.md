@@ -1,1 +1,0 @@
-:::gradysim.simulator.extension.communication_controller.CommunicationController
