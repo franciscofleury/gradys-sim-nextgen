@@ -1,8 +1,8 @@
 # Introduction
 
-The guides in this section will teach you to use the Python Simulator which is
-part of the GrADyS-SIM NextGen framewok. Simulations ran in this mode are said
-to be in prototype mode. 
+The guides in this section will teach you details about the Python Simulator,
+which is part of the GrADyS-SIM NextGen framework. Simulations ran in this mode
+are said to be in `prototype mode`. 
 
 ## Why use the Python Simulator?
 Use this simulator if you want quick iteration, easy setup, and a simple

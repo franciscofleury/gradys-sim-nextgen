@@ -1,4 +1,4 @@
-# Extending the Simulation
+# Extending the Simulation (Camera)
 
 The simulation may not have all possible features that you need. Instead of
 directly modifying simulator code, you should implement 
