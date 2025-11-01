@@ -273,9 +273,17 @@ class TestCommunication(unittest.TestCase):
                 nonlocal received3
                 received3 += 1
 
-        node1 = Node(); node1.id = 1; node1.position = (0, 0, 0)
-        node2 = Node(); node2.id = 2; node2.position = (5, 0, 0); node2.protocol_encapsulator = Enc2()
-        node3 = Node(); node3.id = 3; node3.position = (15, 0, 0); node3.protocol_encapsulator = Enc3()
+        node1 = Node()
+        node1.id = 1
+        node1.position = (0, 0, 0)
+        node2 = Node()
+        node2.id = 2
+        node2.position = (5, 0, 0)
+        node2.protocol_encapsulator = Enc2()
+        node3 = Node()
+        node3.id = 3
+        node3.position = (15, 0, 0)
+        node3.protocol_encapsulator = Enc3()
 
         medium = CommunicationMedium(transmission_range=10, delay=0)
         event_loop = EventLoop()
@@ -308,9 +316,17 @@ class TestCommunication(unittest.TestCase):
                 nonlocal received3
                 received3 += 1
 
-        node1 = Node(); node1.id = 1; node1.position = (0, 0, 0)
-        node2 = Node(); node2.id = 2; node2.position = (5, 0, 0); node2.protocol_encapsulator = Enc2()
-        node3 = Node(); node3.id = 3; node3.position = (8, 0, 0); node3.protocol_encapsulator = Enc3()
+        node1 = Node()
+        node1.id = 1
+        node1.position = (0, 0, 0)
+        node2 = Node()
+        node2.id = 2
+        node2.position = (5, 0, 0)
+        node2.protocol_encapsulator = Enc2()
+        node3 = Node()
+        node3.id = 3
+        node3.position = (8, 0, 0)
+        node3.protocol_encapsulator = Enc3()
 
         delay = 1.2
         medium = CommunicationMedium(transmission_range=20, delay=delay)
@@ -333,7 +349,8 @@ class TestCommunication(unittest.TestCase):
         self.assertEqual(e2.timestamp, t0 + delay)
 
         # Execute to ensure messages are received
-        e1.callback(); e2.callback()
+        e1.callback()
+        e2.callback()
         self.assertEqual(received2, 1)
         self.assertEqual(received3, 1)
 
@@ -344,12 +361,20 @@ class TestCommunication(unittest.TestCase):
             def handle_packet(self, _message: dict):
                 nonlocal received
                 received += 1
-        node1 = Node(); node1.id = 1; node1.position = (0, 0, 0)
-        node2 = Node(); node2.id = 2; node2.position = (8, 0, 0); node2.protocol_encapsulator = Enc()
+        node1 = Node()
+        node1.id = 1
+        node1.position = (0, 0, 0)
+        node2 = Node()
+        node2.id = 2
+        node2.position = (8, 0, 0)
+        node2.protocol_encapsulator = Enc()
 
         default = CommunicationMedium(transmission_range=5)
-        event_loop = EventLoop(); handler = CommunicationHandler(default); handler.inject(event_loop)
-        handler.register_node(node1); handler.register_node(node2)
+        event_loop = EventLoop()
+        handler = CommunicationHandler(default)
+        handler.inject(event_loop)
+        handler.register_node(node1)
+        handler.register_node(node2)
 
         cmd = CommunicationCommand(CommunicationCommandType.SEND, "", 2)
         handler.handle_command(cmd, node1)  # should not schedule
@@ -366,14 +391,24 @@ class TestCommunication(unittest.TestCase):
             def handle_packet(self, _message: dict):
                 nonlocal received
                 received += 1
-        node1 = Node(); node1.id = 1; node1.position = (0, 0, 0)
-        node2 = Node(); node2.id = 2; node2.position = (0, 0, 0); node2.protocol_encapsulator = Enc()
+        node1 = Node()
+        node1.id = 1
+        node1.position = (0, 0, 0)
+        node2 = Node()
+        node2.id = 2
+        node2.position = (0, 0, 0)
+        node2.protocol_encapsulator = Enc()
 
-        event_loop = EventLoop(); handler = CommunicationHandler(CommunicationMedium(delay=-1))
-        handler.inject(event_loop); handler.register_node(node1); handler.register_node(node2)
+        event_loop = EventLoop()
+        handler = CommunicationHandler(CommunicationMedium(delay=-1))
+        handler.inject(event_loop)
+        handler.register_node(node1)
+        handler.register_node(node2)
         cmd = CommunicationCommand(CommunicationCommandType.SEND, "", 2)
         handler.handle_command(cmd, node1)
         self.assertEqual(len(event_loop), 1)
-        e = event_loop.pop_event(); self.assertEqual(e.timestamp, event_loop.current_time)
-        e.callback(); self.assertEqual(received, 1)
+        e = event_loop.pop_event()
+        self.assertEqual(e.timestamp, event_loop.current_time)
+        e.callback()
+        self.assertEqual(received, 1)
 
