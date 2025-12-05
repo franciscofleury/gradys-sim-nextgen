@@ -150,6 +150,12 @@ class Drone:
         
         await self.update_telemetry()
 
+    async def get_battery_level(self):
+        battery_result = await self.get("/telemetry/battery_info")
+        if battery_result.status_code != 200:
+            return None
+        return battery_result.json["info"]["battery_remaining"]
+        
     async def shutdown(self):
         # Cancel the request consumer task if running
         self._logger.debug(f"[DRONE-{self.node_id}] Shutting down drone API and request consumer task.")
@@ -190,6 +196,8 @@ class ArdupilotMobilityConfiguration:
     will be used as the center of the scene and all geographical coordinates will be converted relative to it.
     """
 
+    generate_report: bool = True
+
 class ArdupilotMobilityHandler(INodeHandler):
     """
     Introduces Ardupilot mobility into the simulatuon. Works by registering a regular event that
@@ -221,6 +229,7 @@ class ArdupilotMobilityHandler(INodeHandler):
         self.drones = {}
         self._injected = False
         self._logger = logging.getLogger()
+        self._report = {}
 
     def inject(self, event_loop: EventLoop):
         self._injected = True
@@ -235,6 +244,20 @@ class ArdupilotMobilityHandler(INodeHandler):
         self.drones[node.id].start_drone()
         self.nodes[node.id] = node
 
+    async def _initialize_report(self):
+        for node_id in self.nodes.keys():
+            drone = self.drones[node_id]
+            battery_level = await drone.get_battery_level()
+            if battery_level == None:
+                self._logger.debug(f"Error fetching battery level for node {node_id}. Cancelling report generation...")
+                self._configuration.generate_report = False
+                return
+            self._report[node_id] = {
+                "initial_battery": battery_level,
+                "telemetry_requests": 0,
+                "telemetry_drops": 0
+            }
+
     async def _initialize_drones(self):
 
         drone_tasks = []
@@ -247,7 +270,9 @@ class ArdupilotMobilityHandler(INodeHandler):
         await asyncio.gather(*drone_tasks)  
 
     async def initialize(self):
-        await self._initialize_drones()     
+        await self._initialize_drones() 
+        if self._configuration.generate_report:
+            await self._initialize_report()
         self._setup_telemetry()     
 
     def _ardupilot_error(self, message):
@@ -260,6 +285,9 @@ class ArdupilotMobilityHandler(INodeHandler):
         def send_telemetry(node_id):
             node = self.nodes[node_id]
             drone = self.drones[node_id]
+
+            if self._configuration.generate_report:
+                self._report[node_id]["telemetry_requests"] += 1
             if not drone.telemetry_requested:
                 node.position = drone.position
                 telemetry = Telemetry(current_position=node.position)
@@ -268,7 +296,10 @@ class ArdupilotMobilityHandler(INodeHandler):
                 drone.request_telemetry()
                 self._logger.debug(f"Telemetry requested for node {node_id}.")
             else:
+                if self._configuration.generate_report:
+                    self._report[node_id]["telemetry_drops"] += 1
                 self._logger.debug(f"Telemetry already requested for node {node_id}, skipping.")
+
             
             self._event_loop.schedule_event(self._event_loop.current_time + self._configuration.update_rate,
                                     make_send_telemetry(node_id), "ArdupilotMobility")
@@ -306,7 +337,24 @@ class ArdupilotMobilityHandler(INodeHandler):
         elif command.command_type == MobilityCommandType.STOP:
             drone.stop()
 
+    async def _finalize_report(self):
+        report_str = ""
+        report_str += f"GENERATING ARDUPILOT MOBILITY HANDLER REPORT:\n"
+        for node_id in self.nodes.keys():
+            drone = self.drones[node_id]
+            battery_level = await drone.get_battery_level()
+            if battery_level == None:
+                self._logger.debug(f"Error fetching battery level for node {node_id}. Cancelling report generation...")
+                self._configuration.generate_report = False
+                return
+            self._report[node_id]["final_battery"] = battery_level
+            report_str += f"Report for drone {node_id}:\n"
+            report_str += str(self._report[node_id]) + "\n\n"
+        
+        print(report_str)
     async def finalize(self):
+        if self._configuration.generate_report:
+            await self._finalize_report()
         for node_id in self.drones.keys():
             drone = self.drones[node_id]
             await drone.shutdown()
