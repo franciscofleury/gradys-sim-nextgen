@@ -257,8 +257,13 @@ class Simulator:
         if self._configuration.profile:
             start_time = time.time()
         
-        event.callback()
+        simulation_exception = None
 
+        try:
+            event.callback()
+        except Exception as e:
+            simulation_exception = e
+        
         if self._configuration.profile:
             self._profiling_context_total_count[event.context] = (
                     self._profiling_context_total_count.get(event.context, 0) + 1)
@@ -272,6 +277,11 @@ class Simulator:
         self._current_timestamp = event.timestamp
 
         is_done = self.is_simulation_done()
+
+        if simulation_exception is not None:
+            self._logger.error(f"Error while processing event '{event.context}': {simulation_exception}", exc_info=simulation_exception)
+            self._logger.error("Finalizing simulation due to error...")
+            is_done = True
 
         if is_done:
             await self._finalize_simulation()
@@ -308,7 +318,9 @@ class Simulator:
                     await asyncio.sleep(sleep_duration)
 
             step_start = time.time()
+            
             is_running = await self.step_simulation()
+
             last_step_duration = time.time() - step_start
 
         self._logger.info("[--------- Simulation finished ---------]")
