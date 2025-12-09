@@ -351,7 +351,7 @@ class ArdupilotMobilityHandler(INodeHandler):
             report_str += f"Report for drone {node_id}:\n"
             report_str += str(self._report[node_id]) + "\n\n"
         
-        print(report_str)
+        self._logger.info(report_str)
     async def finalize(self):
         if self._configuration.generate_report:
             await self._finalize_report()
