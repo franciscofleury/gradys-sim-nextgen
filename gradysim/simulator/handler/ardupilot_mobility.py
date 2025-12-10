@@ -3,6 +3,7 @@ import time
 import aiohttp
 import asyncio
 import logging
+import csv
 
 from dataclasses import dataclass
 from typing import Dict, Tuple
@@ -351,6 +352,30 @@ class ArdupilotMobilityHandler(INodeHandler):
             report_str += f"Report for drone {node_id}:\n"
             report_str += str(self._report[node_id]) + "\n\n"
         
+        # Also write a CSV report containing telemetry_requests, telemetry_drops and battery_wasted
+        try:
+            csv_path = "ardupilot_mobility_report.csv"
+            with open(csv_path, "w", newline="") as csvfile:
+                writer = csv.writer(csvfile)
+                # include node id for clarity plus the requested columns
+                writer.writerow(["node_id", "telemetry_requests", "telemetry_drops", "battery_wasted"])
+                for node_id in self.nodes.keys():
+                    entry = self._report.get(node_id, {})
+                    req = entry.get("telemetry_requests", 0)
+                    drops = entry.get("telemetry_drops", 0)
+                    initial_b = entry.get("initial_battery")
+                    final_b = entry.get("final_battery")
+                    wasted = ""
+                    try:
+                        if initial_b is not None and final_b is not None:
+                            wasted = float(initial_b) - float(final_b)
+                    except Exception:
+                        wasted = ""
+                    writer.writerow([node_id, req, drops, wasted])
+            self._logger.info(f"Ardupilot mobility CSV report written to {csv_path}")
+        except Exception as e:
+            self._logger.debug(f"Failed writing CSV report: {e}")
+
         self._logger.info(report_str)
     async def finalize(self):
         if self._configuration.generate_report:
