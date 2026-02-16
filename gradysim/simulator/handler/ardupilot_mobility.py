@@ -13,7 +13,6 @@ from gradysim.protocol.messages.telemetry import Telemetry
 from gradysim.protocol.position import Position, geo_to_cartesian
 from gradysim.simulator.event import EventLoop
 from gradysim.simulator.handler.interface import INodeHandler
-from gradysim.simulator.log import label_node
 from gradysim.simulator.node import Node
 
 from uav_api.run_api import run_with_args
@@ -115,7 +114,7 @@ class Drone:
         self.session = session
 
     def start_drone(self):
-        raw_args = ['--simulated', 'true', '--sysid', f'{self.sysid}', '--port', f'{self.port}', '--uav_connection', self.uav_connection, '--speedup', f'{self.speedup}', '--log_console', 'COPTER', "--gs_connection", "172.23.192.1:15630"]
+        raw_args = ['--simulated', 'true', '--sysid', f'{self.sysid}', '--port', f'{self.port}', '--uav_connection', self.uav_connection, '--speedup', '1', '--log_console', 'COPTER', "--gs_connection", "172.23.192.1:15630"]
 
         self.api_process = run_with_args(raw_args)
 
@@ -123,6 +122,10 @@ class Drone:
         self._logger.debug(f"[DRONE-{self.node_id}] API process started.")
 
         time.sleep(5)  # Wait for the drone API to start
+
+        self._logger.debug(f"[DRONE-{self.node_id}] Setting simulation speedup to 10.")
+        await self.set_sim_speedup(10)
+        self._logger.debug(f"[DRONE-{self.node_id}] Simulation speedup set to 10.")
 
         self._logger.debug(f"[DRONE-{self.node_id}] Arming...")
         arm_result = await self.get("/command/arm")
@@ -185,7 +188,7 @@ class ArdupilotMobilityConfiguration:
     Configuration class for the Ardupilot mobility handler
     """
 
-    update_rate: float = 1
+    update_rate: float = 0.5
     """Interval in simulation seconds between Ardupilot mobility updates"""
 
     default_speed: float = 10
@@ -267,9 +270,10 @@ class ArdupilotMobilityHandler(INodeHandler):
             drone = self.drones[node_id]
             drone.set_session(http_session)
             drone_tasks.append(asyncio.create_task(drone.goto_initial_position()))
-
-        await asyncio.gather(*drone_tasks)  
-
+        try:
+            await asyncio.gather(*drone_tasks)  
+        except Exception as e:
+            self._ardupilot_error(f"Error initializing drones.")
     async def initialize(self):
         await self._initialize_drones() 
         if self._configuration.generate_report:
@@ -279,7 +283,13 @@ class ArdupilotMobilityHandler(INodeHandler):
     def _ardupilot_error(self, message):
         for node_id in self.drones.keys():
             drone = self.drones[node_id]
-            drone.end_drone()
+            event_loop = asyncio.get_event_loop()
+            try:
+                shutdown_result = event_loop.run_until_complete(drone.shutdown())
+                print(f"Shutdown_result: {shutdown_result}")
+            except Exception as e:
+                print(f"Error shutting down drone. {e}")
+                continue
         raise ArdupilotMobilityException(message)
 
     def _setup_telemetry(self):

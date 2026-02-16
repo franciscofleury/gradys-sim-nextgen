@@ -18,7 +18,7 @@ from gradysim.protocol.plugin.dispatcher import create_dispatcher, DispatchRetur
 from gradysim.protocol.interface import IProtocol
 
 
-DATA_COLLECTION_INTERVAL = 1
+DATA_COLLECTION_INTERVAL = 0.5
 
 def handle_timer_srt(protocol: IProtocol, timer: str) -> DispatchReturn:
     """'
