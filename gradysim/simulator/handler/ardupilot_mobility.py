@@ -26,8 +26,23 @@ class AsyncHttpResponse:
     json: dict
 
 class Drone:
-
+    """
+    Represents the Ardupilot version of the Node. This class maintains a co-routine
+    that executes requests to UAV API to provide implementation for Mobility Commands
+    and Telemetry updates. Each Node has an equivalent Drone instance.
+    """
     async def get(self, url, params=None):
+        """
+        Performs an asynchronous HTTP GET request to the UAV API running on the port 
+        defined on this instance.
+
+        Args: 
+            url: the path to be append after the domain
+            params: dictionary of query parameters to be used in the request
+
+        Returns:
+            A co-routine of the HTTP request returning either HttpResponse if successfull or Exception if not
+        """
         async with self.session.get(self.drone_url + url, params=params) as response:
             if response.status == 200:
                 response_obj = AsyncHttpResponse(response.status, await response.json())
@@ -36,6 +51,17 @@ class Drone:
                 raise Exception(f"Failed to fetch data from {url}. Status code: {response.status}")
 
     async def post(self, url, json=None):
+        """
+        Performs an asynchronous HTTP POST request to the UAV API running on the port 
+        defined on this instance.
+
+        Args: 
+            url: the path to be append after the domain
+            json: dictionary of the parameters to be passed in the body of the request
+
+        Returns:
+            A co-routine of the HTTP request returning either HttpResponse if successfull or Exeception if not
+        """
         async with self.session.post(self.drone_url + url, json=json) as response:
             if response.status == 200:
                 response_obj = AsyncHttpResponse(response.status, await response.json())
@@ -44,6 +70,9 @@ class Drone:
                 raise Exception(f"Failed to post data to {url}. Status code: {response.status}")
 
     def __init__(self, node_id, initial_position, logger):
+        """
+        Sets base parameters for connection with UAV API as well as instantiate asyncio Queue,
+        """
         self._logger = logger
         self.node_id = node_id + 10
         self.api_process = None
@@ -54,32 +83,73 @@ class Drone:
         self.set_base_parameters()
     
     def request_telemetry(self):
+        """
+        Adds a telemetry update to the async request queue. Marks the telemetry_request flag as True.
+        """
         self.telemetry_requested = True
         self.add_request(self.update_telemetry)
 
     async def update_telemetry(self):
+        """
+        Performs a telemetry update action by making an HTTP request to UAV API and then updating the
+        instance position property. Finally, it marks the telemetry_requested flag as False.
+        """
         telemetry_result = await self.get("/telemetry/ned")
         position = telemetry_result.json["info"]["position"]
-        self.position = (position["x"], position["y"], -position["z"])
+        self.position = (position["x"], position["y"], -position["z"]) # translating NED frame to XYZ frame
         self.telemetry_requested = False
 
     def move_to(self, position: Position):
+        """
+        Schedules a movement command to be sent to UAV API. This action will be executed by the request
+        consumer of the instance.
+
+        Args:
+            position: dictionary of XYZ coordinates of target waypoint
+        """
         ned_position = {"x": position[0], "y": position[1], "z": -position[2]}
         self.add_request(lambda: self.post("/movement/go_to_ned", json=ned_position))
 
     def stop(self):
+        """
+        Scheduels a stop command to be sent to UAV API. This action will be executed by the request consumer of the instance
+        """
         self.add_request(lambda: self.get("/command/stop"))
 
     def set_speed(self, speed: int):
+        """
+        Schedules a airspeed change command to be sent to UAV API. This action will be executed by the request consumer
+        of the instance
+        
+        Args:
+            speed: new airspeed value for vehicle. This velocity corresponds to the value of the norm of the velocity vector.
+        """
         self.add_request(lambda: self.get("/command/set_air_speed", params={"new_v": speed}))
     
     async def set_sim_speedup(self, speedup: int):
+        """
+        Schedules a simulation speedup change command to be sent to UAV API. This action will be executed by the request
+        consumer of the instance
+
+        Args:
+            speedup: the integer multiplier for simulation speedup. A value of 1 corresponds to real time
+        """
         await self.get("/command/set_sim_speedup", params={"sim_factor": speedup})
 
     def add_request(self, coro):
+        """
+        Adds an async fucntion to the request queue. Items on this queue are later removed and executedby the request
+        consumer co-routine.
+
+        Args:
+            coro: asynchronous function that returns a co-routine. 
+        """
         self._request_queue.put_nowait(coro)
 
     async def _request_consumer(self):
+        """
+        Pools co-routines from the request queue and awaits them. If the co-routine raises an Exception the loop logs it.
+        """
         self._logger.debug(f"[ArdupilotMobilityHandler] Starting request consumer for node {self.node_id}")
         while True:
             request = await self._request_queue.get()
@@ -91,6 +161,9 @@ class Drone:
             self._request_queue.task_done()
 
     def set_base_parameters(self, port=None, uav_connection=None, sysid=None, speedup=None):
+        """
+        Defines base parameter for UAV API connection
+        """
         if port:
             self.port = port
         else:
@@ -111,14 +184,27 @@ class Drone:
         self.drone_url = f"http://localhost:{self.port}"
 
     def set_session(self, session):
+        """
+        Set a new AsyncHttp session
+
+        Args:
+            session: AsyncHttp session instance
+        """
         self.session = session
 
     def start_drone(self):
+        """
+        Starts UAV API instance with base parameters.
+        """
         raw_args = ['--simulated', 'true', '--sysid', f'{self.sysid}', '--port', f'{self.port}', '--uav_connection', self.uav_connection, '--speedup', '1', '--log_console', 'COPTER', "--gs_connection", "172.23.192.1:15630"]
 
         self.api_process = run_with_args(raw_args)
 
     async def goto_initial_position(self):
+        """
+        Performs a series of requests to UAV API in order to drive the vehicle to the simulation
+        starting point. During this process simulation is sped up and then slown down to real time again.
+        """
         self._logger.debug(f"[DRONE-{self.node_id}] API process started.")
 
         time.sleep(5)  # Wait for the drone API to start
@@ -155,12 +241,22 @@ class Drone:
         await self.update_telemetry()
 
     async def get_battery_level(self):
+        """
+        Makes a battery level telemetry request to UAV API. If successfull returns battery level
+
+        Returns:
+            Remaining vehicle battery in percentage
+        """
         battery_result = await self.get("/telemetry/battery_info")
         if battery_result.status_code != 200:
             return None
         return battery_result.json["info"]["battery_remaining"]
         
     async def shutdown(self):
+        """
+        Terminates current co-routines and external process. This function should be called when
+        the simulation has either finished or encountered an error.
+        """
         # Cancel the request consumer task if running
         self._logger.debug(f"[DRONE-{self.node_id}] Shutting down drone API and request consumer task.")
         if self._request_consumer_task:
@@ -189,10 +285,10 @@ class ArdupilotMobilityConfiguration:
     """
 
     update_rate: float = 0.5
-    """Interval in simulation seconds between Ardupilot mobility updates"""
+    """Interval in simulation seconds between Ardupilot telemetry updates"""
 
     default_speed: float = 10
-    """This is the default speed of a node in m/s"""
+    """Default starting airspeed of a node in m/s"""
 
     reference_coordinates: Tuple[float, float, float] = (0, 0, 0)
     """
@@ -204,11 +300,10 @@ class ArdupilotMobilityConfiguration:
 
 class ArdupilotMobilityHandler(INodeHandler):
     """
-    Introduces Ardupilot mobility into the simulatuon. Works by registering a regular event that
-    updates every node's position based on it's target and speed. A node, through it's provider,
-    can sent this handler communication commands to alter it's behaviour including it's speed 
-    and current target. Nodes also recieve telemetry updates containing information pertaining
-    a node's current Ardupilot mobility status.
+    Introduces mobility into the simulatuon by communicating with a SITL-based simulation of the Node. Works by
+    seding requests to UAV API library which connects to the Ardupilot software. It implements telemetry by
+    constantly making requests to 'telemetry/ned' at a fixed rate and translating mobility commands into HTTP 
+    requests to UAV API
     """
 
     @staticmethod
@@ -226,7 +321,8 @@ class ArdupilotMobilityHandler(INodeHandler):
         Constructor for the Ardupilot mobility handler
 
         Args:
-            configuration: Configuration for the Ardupilot mobility handler. If not set all default values will be used.
+            configuration: Configuration for the Ardupilot mobility handle. This includes parameters used in 
+            UAV API initialization If not set all default values will be used.
         """
         self._configuration = configuration
         self.nodes = {}
@@ -240,6 +336,13 @@ class ArdupilotMobilityHandler(INodeHandler):
         self._event_loop = event_loop
 
     def register_node(self, node: Node):
+        """
+        Instantiates Drone object equivalent to the Node provided. Starts the UAV API
+        process associated with this instance.
+
+        Args:
+            node: the Node instance that will be registered in the handler
+        """
         if not self._injected:
             self._ardupilot_error("Error registering node: cannot register nodes while Ardupilot mobility handler "
                                     "is uninitialized.")
@@ -249,6 +352,9 @@ class ArdupilotMobilityHandler(INodeHandler):
         self.nodes[node.id] = node
 
     async def _initialize_report(self):
+        """
+        Initializes properties for tracking variables used in report
+        """
         for node_id in self.nodes.keys():
             drone = self.drones[node_id]
             battery_level = await drone.get_battery_level()
@@ -263,7 +369,10 @@ class ArdupilotMobilityHandler(INodeHandler):
             }
 
     async def _initialize_drones(self):
-
+        """
+        Sends each drone to the starting position through the goto_initial_position routine.
+        Each drone has it's own routine and they run concurrently.
+        """
         drone_tasks = []
         for node_id in self.nodes.keys():
             http_session = aiohttp.ClientSession()
@@ -281,6 +390,14 @@ class ArdupilotMobilityHandler(INodeHandler):
         self._setup_telemetry()     
 
     def _ardupilot_error(self, message):
+        """
+        Prints an error message and shutdowns Drone instances. This function
+        should be called when an error has ocurred in the connection with 
+        UAV API. Raises an ArdupilotMobilityHandlerException
+
+        Args:
+            message: the message to be printed
+        """
         for node_id in self.drones.keys():
             drone = self.drones[node_id]
             event_loop = asyncio.get_event_loop()
@@ -293,6 +410,12 @@ class ArdupilotMobilityHandler(INodeHandler):
         raise ArdupilotMobilityException(message)
 
     def _setup_telemetry(self):
+        """
+        Initiates a recorrent telemetry event at a fixed rate for each node. Every time the event
+        fires, it checks if the last position information was updated. If not, it simply skips.
+        If it was updated, it calls handle_telemetry method of the corresponding node and requests
+        a new telemetry update.
+        """
         def send_telemetry(node_id):
             node = self.nodes[node_id]
             drone = self.drones[node_id]
@@ -324,8 +447,9 @@ class ArdupilotMobilityHandler(INodeHandler):
 
     def handle_command(self, command: MobilityCommand, node: Node):
         """
-        Performs a mobility command. This method is called by the node's 
-        provider to transmit it's mobility command to the mobility handler.
+        Performs a mobility command in the SITL-based simulation. This method is called
+        by the node's provider to transmit it's mobility command to the ardupilot mobility
+        handler and then to the node's UAV API.
 
         Args:
             command: Command being issued
@@ -349,6 +473,9 @@ class ArdupilotMobilityHandler(INodeHandler):
             drone.stop()
 
     async def _finalize_report(self):
+        """
+        Ends report tracking and outputs csv file with report information.
+        """
         report_str = ""
         report_str += f"GENERATING ARDUPILOT MOBILITY HANDLER REPORT:\n"
         for node_id in self.nodes.keys():
@@ -388,6 +515,7 @@ class ArdupilotMobilityHandler(INodeHandler):
 
         self._logger.info(report_str)
     async def finalize(self):
+        """Ends simulation by finalizing report and shutting down drones."""
         if self._configuration.generate_report:
             await self._finalize_report()
         for node_id in self.drones.keys():
