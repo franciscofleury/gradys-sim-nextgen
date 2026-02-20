@@ -112,16 +112,29 @@ class Drone:
         self.position = (position["x"], position["y"], -position["z"]) # translating NED frame to XYZ frame
         self._telemetry_requested = False
 
-    def move_to(self, position: Position):
+    def move_to_xyz(self, position: Position):
         """
-        Schedules a movement command to be sent to UAV API. This action will be executed by the request
-        consumer of the instance.
+        Schedules a movement command to a provided (x, y, z) value in the simulation frame. This request will be sent to UAV API by the request
+        consumer of the instance
 
         Args:
             position: dictionary of XYZ coordinates of target waypoint
         """
         ned_position = {"x": position[0], "y": position[1], "z": -position[2]}
         self.add_request(lambda: self.post("/movement/go_to_ned", json=ned_position))
+
+    def move_to_gps(self, lat, lon, alt):
+        """
+        Schedules a movement command to provided GPS coordinates. This request will be sent to UAV API by the request consumer of the instance
+        
+        Args:
+            lat: latitude in degrees of the target waypoint
+            lon: longitude in degrees of the target waypoint
+            alt: altitude in meters of the target waypoint
+        """
+
+        gps_position = {"lat": lat, "long": lon, "alt": alt}
+        self.add_request(lambda: self.post("/movement/go_to_gps", json=gps_position))
 
     def stop(self):
         """
@@ -503,12 +516,9 @@ class ArdupilotMobilityHandler(INodeHandler):
             self._ardupilot_error("Error handling commands: Cannot handle command from unregistered node")
 
         if command.command_type == MobilityCommandType.GOTO_COORDS:
-            drone.move_to((command.param_1, command.param_2, command.param_3))
+            drone.move_to_xyz((command.param_1, command.param_2, command.param_3))
         elif command.command_type == MobilityCommandType.GOTO_GEO_COORDS:
-            # This can be improved
-            relative_coords = geo_to_cartesian(self._configuration.reference_coordinates,
-                                               (command.param_1, command.param_2, command.param_3))
-            drone.move_to(relative_coords, node)
+            drone.move_to_gps(command.param_1, command.param_2, command.param_3)
         elif command.command_type == MobilityCommandType.SET_SPEED:
             drone.set_speed(command.param_1)
         elif command.command_type == MobilityCommandType.STOP:
