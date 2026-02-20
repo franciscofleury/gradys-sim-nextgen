@@ -272,7 +272,6 @@ class Drone:
         Terminates current co-routines and external process. This function should be called when
         the simulation has either finished or encountered an error.
         """
-        # Cancel the request consumer task if running
         self._logger.debug(f"[DRONE-{self._node_id}] Shutting down drone API and request consumer task.")
         if self._request_consumer_task:
             self._request_consumer_task.cancel()
@@ -282,7 +281,7 @@ class Drone:
                 pass
 
         self._logger.debug(f"[DRONE-{self._node_id}] Request consumer task cancelled.")
-        # Optionally close aiohttp session if you own it
+
         if hasattr(self, "session") and self.session:
             await self.session.close()
         
@@ -333,7 +332,6 @@ class ArdupilotMobilityHandler(INodeHandler):
     constantly making requests to 'telemetry/ned' at a fixed rate and translating mobility commands into HTTP 
     requests to UAV API
     """
-
     @staticmethod
     def get_label() -> str:
         return "mobility"
@@ -432,10 +430,7 @@ class ArdupilotMobilityHandler(INodeHandler):
             message: the message to be printed
         """
         try:
-            # Check if an event loop is already running
-            running_loop = asyncio.get_running_loop()
-            # If we're here, there's an active event loop
-            # Create tasks for all shutdowns
+            asyncio.get_running_loop()
             tasks = []
             for node_id in self.drones.keys():
                 drone = self.drones[node_id]
@@ -445,7 +440,6 @@ class ArdupilotMobilityHandler(INodeHandler):
                     print(f"Error scheduling drone shutdown. {e}")
                     continue
         except RuntimeError:
-            # No running event loop, use run_until_complete
             event_loop = asyncio.get_event_loop()
             for node_id in self.drones.keys():
                 drone = self.drones[node_id]
@@ -537,7 +531,6 @@ class ArdupilotMobilityHandler(INodeHandler):
             report_str += f"Report for drone {node_id}:\n"
             report_str += str(self._report[node_id]) + "\n\n"
         
-        # Also write a CSV report containing telemetry_requests, telemetry_drops and battery_wasted
         try:
             csv_path = "ardupilot_mobility_report.csv"
             with open(csv_path, "w", newline="") as csvfile:
