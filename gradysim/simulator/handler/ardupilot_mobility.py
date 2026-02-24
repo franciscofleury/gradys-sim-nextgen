@@ -10,12 +10,14 @@ from typing import Dict, Tuple
 
 from gradysim.protocol.messages.mobility import MobilityCommand, MobilityCommandType
 from gradysim.protocol.messages.telemetry import Telemetry
-from gradysim.protocol.position import Position, geo_to_cartesian
+from gradysim.protocol.position import Position
 from gradysim.simulator.event import EventLoop
 from gradysim.simulator.handler.interface import INodeHandler
 from gradysim.simulator.node import Node
 
 from uav_api.run_api import run_with_args
+
+SITL_SLEEP_TIME = 5
 
 class ArdupilotMobilityException(Exception):
     pass
@@ -36,11 +38,12 @@ class Drone:
     _request_consumer_task = None
     _request_queue = None
     _node_id = None
-    _telemetry_requested = False
     _api_port = None
     _drone_url = None
     _api_process = None
+    _session: aiohttp.ClientSession
 
+    telemetry_requested = False
     position = None
 
     def __init__(self, node_id, initial_position, logger, api_port):
@@ -49,12 +52,13 @@ class Drone:
         """
         self._logger = logger
         self._node_id = node_id
-        self._telemetry_requested = False
+        self.telemetry_requested = False
         self._request_queue = asyncio.Queue()
         self._request_consumer_task = None
         self._api_port = api_port + self._node_id
-        self._drone_url = f"http://localhost:{api_port}"
-        
+        self._drone_url = f"http://localhost:{self._api_port}"
+        self._session = None
+
         self.position = initial_position
 
     async def get(self, url, params=None):
@@ -69,12 +73,12 @@ class Drone:
         Returns:
             A co-routine of the HTTP request returning either HttpResponse if successfull or Exception if not
         """
-        async with self.session.get(self._drone_url + url, params=params) as response:
+        async with self._session.get(self._drone_url + url, params=params) as response:
             if response.status == 200:
                 response_obj = AsyncHttpResponse(response.status, await response.json())
                 return response_obj
             else:
-                raise Exception(f"Failed to fetch data from {url}. Status code: {response.status}")
+                raise Exception(f"[DRONE-{self._node_id}] Failed to fetch data from {url}. Status code: {response.status}")
 
     async def post(self, url, json=None):
         """
@@ -88,7 +92,7 @@ class Drone:
         Returns:
             A co-routine of the HTTP request returning either HttpResponse if successfull or Exeception if not
         """
-        async with self.session.post(self._drone_url + url, json=json) as response:
+        async with self._session.post(self._drone_url + url, json=json) as response:
             if response.status == 200:
                 response_obj = AsyncHttpResponse(response.status, await response.json())
                 return response_obj
@@ -99,7 +103,7 @@ class Drone:
         """
         Adds a telemetry update to the async request queue. Marks the telemetry_request flag as True.
         """
-        self._telemetry_requested = True
+        self.telemetry_requested = True
         self.add_request(self.update_telemetry)
 
     async def update_telemetry(self):
@@ -110,7 +114,7 @@ class Drone:
         telemetry_result = await self.get("/telemetry/ned")
         position = telemetry_result.json["info"]["position"]
         self.position = (position["x"], position["y"], -position["z"]) # translating NED frame to XYZ frame
-        self._telemetry_requested = False
+        self.telemetry_requested = False
 
     def move_to_xyz(self, position: Position):
         """
@@ -160,7 +164,9 @@ class Drone:
         Args:
             speedup: the integer multiplier for simulation speedup. A value of 1 corresponds to real time
         """
+        self._logger.debug(f"[DRONE-{self._node_id}] Setting simulation speedup to {speedup}.")
         await self.get("/command/set_sim_speedup", params={"sim_factor": speedup})
+        self._logger.debug(f"[DRONE-{self._node_id}] Simulation speedup set to {speedup}.")
 
     def add_request(self, coro):
         """
@@ -199,58 +205,56 @@ class Drone:
         Args:
             session: AsyncHttp session instance
         """
-        self.session = session
+        self._session = session
 
-    def start_simulated_drone(self, uav_connection=None, sysid=None, speedup=None, ground_station_ip=None):
+    def start_simulated_drone(self, uav_connection=None, sysid=None, speedup=None, ground_station_ip=None, ardupilot_path=None, uav_api_log_path=None):
         """
         Starts UAV API simulated instance with base parameters.
         """
 
-        if uav_connection:
-            self._uav_connection = uav_connection
-        else:
-            self._uav_connection = f'127.0.0.1:17{170+self._node_id}'
-        if sysid:
-            self._sysid = sysid
-        else:
-            self._sysid = self._node_id + 10
-        if speedup:
-            self._speedup = speedup
-        else:
-            self._speedup = 10
-        if ground_station_ip:
-            self._ground_station_ip = ground_station_ip
-        else:
-            self._ground_station_ip = "172.23.192.1:15630"
+        if uav_connection is None:
+            uav_connection = f'127.0.0.1:17{171+self._node_id}'
+        if sysid is None:
+            sysid = self._node_id + 10
+        if speedup is None:
+            speedup = 5
 
+        raw_args = [
+            '--simulated', 'true', 
+            '--sysid', f'{sysid}', 
+            '--port', f'{self._api_port}', 
+            '--uav_connection', uav_connection, 
+        ]
 
-        raw_args = ['--simulated', 'true', '--sysid', f'{self._sysid}', '--port', f'{self._api_port}', '--uav_connection', self._uav_connection, '--speedup', '1', "--gs_connection", self._ground_station_ip]
+        if ground_station_ip is not None:
+            raw_args.append("--gs_connection")
+            raw_args.append(ground_station_ip)
 
-        self.api_process = run_with_args(raw_args)
+        if ardupilot_path is not None:
+            raw_args.append("--ardupilot_path")
+            raw_args.append(ardupilot_path)
+        
+        if uav_api_log_path is not None:
+            raw_args.append("--log_path")
+            raw_args.append(uav_api_log_path)
+
+        self._api_process = run_with_args(raw_args)
 
     async def goto_initial_position(self):
         """
         Performs a series of requests to UAV API in order to drive the vehicle to the simulation
         starting point. During this process simulation is sped up and then slown down to real time again.
         """
-        self._logger.debug(f"[DRONE-{self._node_id}] API process started.")
-
-        time.sleep(5)  # Wait for the drone API to start
-
-        self._logger.debug(f"[DRONE-{self._node_id}] Setting simulation speedup to 10.")
-        await self.set_sim_speedup(self._speedup)
-        self._logger.debug(f"[DRONE-{self._node_id}] Simulation speedup set to 10.")
-
         self._logger.debug(f"[DRONE-{self._node_id}] Arming...")
         arm_result = await self.get("/command/arm")
         if arm_result.status_code != 200:
             raise(f"[DRONE-{self._node_id}] Failed to arm drone.")
-        self._logger.debug("[DRONE-{self.node_id}] Arming complete.")
+        self._logger.debug(f"[DRONE-{self._node_id}] Arming complete.")
         
         self._logger.debug(f"[DRONE-{self._node_id}] Taking off...")
         takeoff_result = await self.get("/command/takeoff", params={"alt": 10})
         if takeoff_result.status_code != 200:
-            raise("[DRONE-{self.node_id}] Failed to take off.")
+            raise(f"[DRONE-{self._node_id}] Failed to take off.")
         self._logger.debug(f"[DRONE-{self._node_id}] Takeoff complete.")
 
         self._logger.debug(f"[DRONE-{self._node_id}] Going to start position...")
@@ -260,9 +264,6 @@ class Drone:
             raise(f"[DRONE-{self._node_id}] Failed to go to start position.")
         self._logger.debug(f"[DRONE-{self._node_id}] Go to start position complete.")
 
-        self._logger.debug(f"[DRONE-{self._node_id}] Setting simulation speedup to 1.")
-        await self.set_sim_speedup(1)
-        self._logger.debug(f"[DRONE-{self._node_id}] Simulation speedup set to 1.")
         self._logger.debug(f"[DRONE-{self._node_id}] Starting request consumer task.")
         self._request_consumer_task = asyncio.create_task(self._request_consumer())
         
@@ -286,24 +287,34 @@ class Drone:
         the simulation has either finished or encountered an error.
         """
         self._logger.debug(f"[DRONE-{self._node_id}] Shutting down drone API and request consumer task.")
-        if self._request_consumer_task:
-            self._request_consumer_task.cancel()
+        try:
+            if self._request_consumer_task:
+                self._request_consumer_task.cancel()
+                try:
+                    await self._request_consumer_task
+                except asyncio.CancelledError:
+                    pass
+
+            self._logger.debug(f"[DRONE-{self._node_id}] Request consumer task cancelled.")
+        except Exception as e:
+            self._logger.warning(f"[DRONE-{self._node_id}] Error cancelling request consumer task")
+        
+        self._logger.debug(f"[DRONE-{self._node_id}] Closing HTTP session.")
+        try:
+            await self._session.close()
+            self._session = None
+            self._logger.debug(f"[DRONE-{self._node_id}] HTTP session closed.")
+        except Exception as e:
+            self._logger.warning(f"[DRONE-{self._node_id}] Error closing HTTP session: {e}")
+
+        if self._api_process:
+            self._logger.debug(f"[DRONE-{self._node_id}] Terminating drone UAV API process.")
             try:
-                await self._request_consumer_task
-            except asyncio.CancelledError:
-                pass
-
-        self._logger.debug(f"[DRONE-{self._node_id}] Request consumer task cancelled.")
-
-        if hasattr(self, "session") and self.session:
-            await self.session.close()
-        
-        self._logger.debug(f"[DRONE-{self._node_id}] aiohttp session closed.")
-        if self.api_process:
-            self.api_process.terminate()
-            self.api_process = None
-        
-        self._logger.debug(f"[DRONE-{self._node_id}] Drone API process terminated.")
+                self._api_process.terminate()
+                self._api_process = None
+                self._logger.debug(f"[DRONE-{self._node_id}] UAV API process terminated.")
+            except Exception as e:
+                self._logger.warning(f"[DRONE-{self._node_id}] Error terminating UAV API process: {e}")
 
 @dataclass
 class ArdupilotMobilityConfiguration:
@@ -338,6 +349,18 @@ class ArdupilotMobilityConfiguration:
     the formula port_of_node_{node_id} = starting_api_port + {node_id}
     """
 
+    ardupilot_path: str = None
+    """Path for cloned ardupilot repository. Used for SITL initialization when in simulated mode"""
+
+    uav_api_log_path: str = None
+    """Path in which UAV API will save log files. Used in simulated mode."""
+
+    simulation_startup_speedup: int = 1
+    """
+    Multiplier for SITL simulation time. This value will only affect the setup of the simulation,
+    after all drones are positioned in the right place and are ready to start, the simulation time
+    goes back to matching real time.    
+    """
 class ArdupilotMobilityHandler(INodeHandler):
     """
     Introduces mobility into the simulatuon by communicating with a SITL-based simulation of the Node. Works by
@@ -384,6 +407,7 @@ class ArdupilotMobilityHandler(INodeHandler):
         Args:
             node: the Node instance that will be registered in the handler
         """
+
         if not self._injected:
             self._ardupilot_error("Error registering node: cannot register nodes while Ardupilot mobility handler "
                                     "is uninitialized.")
@@ -391,7 +415,12 @@ class ArdupilotMobilityHandler(INodeHandler):
         self.drones[node.id] = Drone(node.id, node.position, self._logger, self._configuration.starting_api_port)
         
         if self._configuration.simulate_drones:
-            self.drones[node.id].start_simulated_drone(ground_station_ip=self._configuration.ground_station_ip)
+            self.drones[node.id].start_simulated_drone(
+                ground_station_ip=self._configuration.ground_station_ip,
+                speedup=self._configuration.simulation_startup_speedup,
+                ardupilot_path=self._configuration.ardupilot_path,
+                uav_api_log_path=self._configuration.uav_api_log_path
+            )
         self.nodes[node.id] = node
 
     async def _initialize_report(self):
@@ -416,17 +445,49 @@ class ArdupilotMobilityHandler(INodeHandler):
         Sends each drone to the starting position through the goto_initial_position routine.
         Each drone has it's own routine and they run concurrently.
         """
-        drone_tasks = []
         for node_id in self.nodes.keys():
+            print(node_id)
             http_session = aiohttp.ClientSession()
             drone = self.drones[node_id]
             drone.set_session(http_session)
-            drone_tasks.append(asyncio.create_task(drone.goto_initial_position()))
+
+        if self._configuration.simulate_drones:
+            time.sleep(SITL_SLEEP_TIME) # Wait for API process to start
+            
+            # drone_speedup_sim_tasks = []
+            # for node_id in self.nodes.keys():
+            #     drone_speedup_sim_tasks.append(self.drones[node_id].set_sim_speedup(self._configuration.simulation_startup_speedup))
+                
+            # try:
+            #     await asyncio.gather(*drone_speedup_sim_tasks)
+            # except Exception as e:
+            #     print(e)
+            #     self._ardupilot_error(f"Error speeding up SITL simulation")
+        
+        drone_init_tasks = []
+        for node_id in self.nodes.keys():
+            drone_init_tasks.append(asyncio.create_task(self.drones[node_id].goto_initial_position()))
+        
         try:
-            await asyncio.gather(*drone_tasks)  
+            await asyncio.gather(*drone_init_tasks)  
         except Exception as e:
             print(e)
             self._ardupilot_error(f"Error initializing drones.")
+
+        if not self._configuration.simulate_drones:
+            return
+        
+        # drone_reset_speedup_tasks = []
+        # for node_id in self.nodes.keys():
+        #     drone = self.drones[node_id]
+        #     drone_reset_speedup_tasks.append(asyncio.create_task(drone.set_simulation_speedup(1)))
+        
+        # try:
+        #     await asyncio.gather(*drone_reset_speedup_tasks)
+        # except Exception as e:
+        #     print(e)
+        #     self._ardupilot_error(f"Error reseting SITL simulation speedup")
+    
     async def initialize(self):
         await self._initialize_drones() 
         if self._configuration.generate_report:
@@ -452,6 +513,8 @@ class ArdupilotMobilityHandler(INodeHandler):
                 except Exception as e:
                     print(f"Error scheduling drone shutdown. {e}")
                     continue
+            
+            asyncio.gather(*tasks)
         except RuntimeError:
             event_loop = asyncio.get_event_loop()
             for node_id in self.drones.keys():
