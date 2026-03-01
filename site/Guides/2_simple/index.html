@@ -12,11 +12,11 @@
         <link rel="prev" href="../1_creating/">
       
       
-        <link rel="next" href="../3_extending/">
+        <link rel="next" href="../3_raft_consensus/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
     
     
       
@@ -24,10 +24,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.e53b48f4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35e1ed30.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
       
       
 
@@ -48,7 +48,7 @@
     
       <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -65,6 +65,7 @@
     
     <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
   
+    
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -91,12 +92,12 @@
     <a href="../.." title="GrADyS-SIM NextGen" class="md-header__button md-logo" aria-label="GrADyS-SIM NextGen" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -119,35 +120,32 @@
     
     
     
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
         
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+      <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -158,14 +156,13 @@
     </div>
   </div>
 </div>
-      
     
     
       <div class="md-header__source">
         <a href="https://github.com/Project-GrADyS/gradys-sim-nextgen" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -201,7 +198,7 @@
     <a href="../.." title="GrADyS-SIM NextGen" class="md-nav__button md-logo" aria-label="GrADyS-SIM NextGen" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
     GrADyS-SIM NextGen
@@ -211,7 +208,7 @@
       <a href="https://github.com/Project-GrADyS/gradys-sim-nextgen" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -226,15 +223,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -245,7 +239,6 @@
     
       
       
-  
   
   
   
@@ -253,10 +246,8 @@
       <a href="../../framework/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     What's included?
-    
   </span>
   
 
@@ -267,7 +258,6 @@
     
       
       
-  
   
   
   
@@ -280,16 +270,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Getting Started
-    
   </span>
   
 
@@ -308,15 +297,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Getting%20Started/execution/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Execution Modes
-    
   </span>
   
 
@@ -331,15 +317,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Getting%20Started/setup/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Quick Setup
-    
   </span>
   
 
@@ -363,7 +346,6 @@
     
   
   
-  
     
     
     
@@ -373,16 +355,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Guides
-    
   </span>
   
 
@@ -401,15 +382,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../1_creating/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Creating a protocol
-    
   </span>
   
 
@@ -426,7 +404,6 @@
     
   
   
-  
     <li class="md-nav__item md-nav__item--active">
       
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
@@ -438,10 +415,8 @@
         <label class="md-nav__link md-nav__link--active" for="__toc">
           
   
-  
   <span class="md-ellipsis">
     Simulating a data collection scenario
-    
   </span>
   
 
@@ -451,10 +426,8 @@
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
-  
   <span class="md-ellipsis">
     Simulating a data collection scenario
-    
   </span>
   
 
@@ -477,27 +450,21 @@
       
         <li class="md-nav__item">
   <a href="#scenario-description" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scenario description
-    </span>
+    Scenario description
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#designing-the-simulation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Designing the simulation
-    </span>
+    Designing the simulation
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#implementing-the-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementing the protocols
-    </span>
+    Implementing the protocols
   </a>
   
     <nav class="md-nav" aria-label="Implementing the protocols">
@@ -505,27 +472,21 @@
         
           <li class="md-nav__item">
   <a href="#sensor" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sensor
-    </span>
+    Sensor
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#ground-station" class="md-nav__link">
-    <span class="md-ellipsis">
-      Ground Station
-    </span>
+    Ground Station
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#uav" class="md-nav__link">
-    <span class="md-ellipsis">
-      UAV
-    </span>
+    UAV
   </a>
   
 </li>
@@ -537,9 +498,7 @@
       
         <li class="md-nav__item">
   <a href="#executing-what-weve-built" class="md-nav__link">
-    <span class="md-ellipsis">
-      Executing what we've built
-    </span>
+    Executing what we've built
   </a>
   
 </li>
@@ -558,38 +517,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../3_extending/" class="md-nav__link">
+      <a href="../3_raft_consensus/" class="md-nav__link">
         
-  
-  
-  <span class="md-ellipsis">
-    Extending the Simulation
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../4_raft_consensus/" class="md-nav__link">
-        
-  
   
   <span class="md-ellipsis">
     RAFT Consensus Plugin
-    
   </span>
   
 
@@ -601,7 +534,6 @@
             
               
                 
-  
   
   
   
@@ -614,26 +546,25 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
         
           
-          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
-    Prototype Mode
-    
+    Python Simulator
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            Prototype Mode
+            Python Simulator
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -642,15 +573,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../Prototype%20Mode/" class="md-nav__link">
+      <a href="../Python%20Simulator/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -665,15 +593,32 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../Prototype%20Mode/communication/" class="md-nav__link">
+      <a href="../Python%20Simulator/1_extending/" class="md-nav__link">
         
   
+  <span class="md-ellipsis">
+    Extending the Simulation (Camera Extension)
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Python%20Simulator/2_radio/" class="md-nav__link">
+        
   
   <span class="md-ellipsis">
-    Communication
-    
+    Multi-radio systems (Radio Extension)
   </span>
   
 
@@ -703,7 +648,6 @@
   
   
   
-  
     
     
     
@@ -713,16 +657,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Modules
-    
   </span>
   
 
@@ -741,7 +684,6 @@
   
   
   
-  
     
     
     
@@ -751,16 +693,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
         
           
           <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Encapsulator
-    
   </span>
   
 
@@ -779,15 +720,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Encapsulator/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -799,7 +737,6 @@
             
               
                 
-  
   
   
   
@@ -807,10 +744,8 @@
       <a href="../../Modules/Encapsulator/interop/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Interop
-    
   </span>
   
 
@@ -825,15 +760,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Encapsulator/python/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Python
-    
   </span>
   
 
@@ -856,7 +788,6 @@
   
   
   
-  
     
     
     
@@ -866,16 +797,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
         
           
           <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Protocol
-    
   </span>
   
 
@@ -894,15 +824,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Protocol/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -914,7 +841,6 @@
             
               
                 
-  
   
   
   
@@ -922,10 +848,8 @@
       <a href="../../Modules/Protocol/position/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Position
-    
   </span>
   
 
@@ -937,7 +861,6 @@
             
               
                 
-  
   
   
   
@@ -950,16 +873,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_3" >
         
           
           <label class="md-nav__link" for="__nav_5_2_3" id="__nav_5_2_3_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Messages
-    
   </span>
   
 
@@ -978,15 +900,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Protocol/messages/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -998,7 +917,6 @@
             
               
                 
-  
   
   
   
@@ -1006,10 +924,8 @@
       <a href="../../Modules/Protocol/messages/communication/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Communication
-    
   </span>
   
 
@@ -1024,15 +940,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Protocol/messages/mobility/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Mobility
-    
   </span>
   
 
@@ -1055,7 +968,6 @@
   
   
   
-  
     
     
     
@@ -1065,16 +977,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_4" >
         
           
           <label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Plugins
-    
   </span>
   
 
@@ -1093,15 +1004,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Protocol/plugins/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1113,7 +1021,6 @@
             
               
                 
-  
   
   
   
@@ -1121,10 +1028,8 @@
       <a href="../../Modules/Protocol/plugins/dispatcher/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Dispatcher
-    
   </span>
   
 
@@ -1136,7 +1041,6 @@
             
               
                 
-  
   
   
   
@@ -1144,10 +1048,8 @@
       <a href="../../Modules/Protocol/plugins/follow_mobility/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Follow Mobility
-    
   </span>
   
 
@@ -1159,7 +1061,6 @@
             
               
                 
-  
   
   
   
@@ -1167,10 +1068,8 @@
       <a href="../../Modules/Protocol/plugins/mission_mobility/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Mission Mobility
-    
   </span>
   
 
@@ -1182,30 +1081,6 @@
             
               
                 
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../Modules/Protocol/plugins/radio/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Radio
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
   
   
   
@@ -1213,10 +1088,8 @@
       <a href="../../Modules/Protocol/plugins/raft/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     RAFT Consensus
-    
   </span>
   
 
@@ -1228,7 +1101,6 @@
             
               
                 
-  
   
   
   
@@ -1236,10 +1108,8 @@
       <a href="../../Modules/Protocol/plugins/random_mobility/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Random Mobility
-    
   </span>
   
 
@@ -1267,7 +1137,6 @@
             
               
                 
-  
   
   
   
@@ -1280,16 +1149,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
         
           
           <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Simulator
-    
   </span>
   
 
@@ -1308,15 +1176,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Simulator/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1328,7 +1193,6 @@
             
               
                 
-  
   
   
   
@@ -1336,10 +1200,8 @@
       <a href="../../Modules/Simulator/event/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Event
-    
   </span>
   
 
@@ -1351,7 +1213,6 @@
             
               
                 
-  
   
   
   
@@ -1359,10 +1220,8 @@
       <a href="../../Modules/Simulator/log/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Log
-    
   </span>
   
 
@@ -1374,7 +1233,6 @@
             
               
                 
-  
   
   
   
@@ -1382,10 +1240,8 @@
       <a href="../../Modules/Simulator/node/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Node
-    
   </span>
   
 
@@ -1397,7 +1253,6 @@
             
               
                 
-  
   
   
   
@@ -1405,10 +1260,8 @@
       <a href="../../Modules/Simulator/simulation/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Simulation
-    
   </span>
   
 
@@ -1420,7 +1273,6 @@
             
               
                 
-  
   
   
   
@@ -1433,16 +1285,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3_6" >
         
           
           <label class="md-nav__link" for="__nav_5_3_6" id="__nav_5_3_6_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Extension
-    
   </span>
   
 
@@ -1461,15 +1312,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Simulator/Extension/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1481,7 +1329,6 @@
             
               
                 
-  
   
   
   
@@ -1489,10 +1336,8 @@
       <a href="../../Modules/Simulator/Extension/camera/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Camera
-    
   </span>
   
 
@@ -1504,18 +1349,15 @@
             
               
                 
-  
   
   
   
     <li class="md-nav__item">
-      <a href="../../Modules/Simulator/Extension/communication_controller/" class="md-nav__link">
+      <a href="../../Modules/Simulator/Extension/radio/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
-    Communication controller
-    
+    Radio
   </span>
   
 
@@ -1527,7 +1369,6 @@
             
               
                 
-  
   
   
   
@@ -1535,10 +1376,8 @@
       <a href="../../Modules/Simulator/Extension/visualization_controller/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Visualization controller
-    
   </span>
   
 
@@ -1561,7 +1400,6 @@
   
   
   
-  
     
     
     
@@ -1571,16 +1409,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3_7" >
         
           
           <label class="md-nav__link" for="__nav_5_3_7" id="__nav_5_3_7_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Handlers
-    
   </span>
   
 
@@ -1599,15 +1436,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Simulator/handlers/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1619,7 +1453,6 @@
             
               
                 
-  
   
   
   
@@ -1627,10 +1460,8 @@
       <a href="../../Modules/Simulator/handlers/assertion/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Assertion
-    
   </span>
   
 
@@ -1642,7 +1473,6 @@
             
               
                 
-  
   
   
   
@@ -1650,10 +1480,8 @@
       <a href="../../Modules/Simulator/handlers/communication/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Communication
-    
   </span>
   
 
@@ -1666,6 +1494,25 @@
               
                 
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Modules/Simulator/handlers/http_communication/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Http communication
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
   
   
   
@@ -1673,10 +1520,8 @@
       <a href="../../Modules/Simulator/handlers/mobility/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Mobility
-    
   </span>
   
 
@@ -1688,7 +1533,6 @@
             
               
                 
-  
   
   
   
@@ -1696,10 +1540,8 @@
       <a href="../../Modules/Simulator/handlers/timer/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Timer
-    
   </span>
   
 
@@ -1714,15 +1556,12 @@
   
   
   
-  
     <li class="md-nav__item">
       <a href="../../Modules/Simulator/handlers/visualization/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
     Visualization
-    
   </span>
   
 
@@ -1783,27 +1622,21 @@
       
         <li class="md-nav__item">
   <a href="#scenario-description" class="md-nav__link">
-    <span class="md-ellipsis">
-      Scenario description
-    </span>
+    Scenario description
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#designing-the-simulation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Designing the simulation
-    </span>
+    Designing the simulation
   </a>
   
 </li>
       
         <li class="md-nav__item">
   <a href="#implementing-the-protocols" class="md-nav__link">
-    <span class="md-ellipsis">
-      Implementing the protocols
-    </span>
+    Implementing the protocols
   </a>
   
     <nav class="md-nav" aria-label="Implementing the protocols">
@@ -1811,27 +1644,21 @@
         
           <li class="md-nav__item">
   <a href="#sensor" class="md-nav__link">
-    <span class="md-ellipsis">
-      Sensor
-    </span>
+    Sensor
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#ground-station" class="md-nav__link">
-    <span class="md-ellipsis">
-      Ground Station
-    </span>
+    Ground Station
   </a>
   
 </li>
         
           <li class="md-nav__item">
   <a href="#uav" class="md-nav__link">
-    <span class="md-ellipsis">
-      UAV
-    </span>
+    UAV
   </a>
   
 </li>
@@ -1843,9 +1670,7 @@
       
         <li class="md-nav__item">
   <a href="#executing-what-weve-built" class="md-nav__link">
-    <span class="md-ellipsis">
-      Executing what we've built
-    </span>
+    Executing what we've built
   </a>
   
 </li>
@@ -1864,7 +1689,6 @@
                 
                   
 
-
   
   
 
@@ -1876,54 +1700,54 @@
 </div>
 <details class="example">
 <summary>Full code of the protocols implemented in this guide</summary>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">enum</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">TypedDict</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">enum</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">import</span> <span class="nn">json</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">import</span> <span class="nn">logging</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypedDict</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.protocol.interface</span><span class="w"> </span><span class="kn">import</span> <span class="n">IProtocol</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.protocol.messages.communication</span><span class="w"> </span><span class="kn">import</span> <span class="n">SendMessageCommand</span><span class="p">,</span> <span class="n">BroadcastMessageCommand</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.protocol.messages.telemetry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Telemetry</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.protocol.plugin.mission_mobility</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissionMobilityPlugin</span><span class="p">,</span> <span class="n">MissionMobilityConfiguration</span><span class="p">,</span> <span class="n">LoopMission</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="kn">from</span> <span class="nn">gradysim.protocol.interface</span> <span class="kn">import</span> <span class="n">IProtocol</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="kn">from</span> <span class="nn">gradysim.protocol.messages.communication</span> <span class="kn">import</span> <span class="n">SendMessageCommand</span><span class="p">,</span> <span class="n">BroadcastMessageCommand</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="kn">from</span> <span class="nn">gradysim.protocol.messages.telemetry</span> <span class="kn">import</span> <span class="n">Telemetry</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="kn">from</span> <span class="nn">gradysim.protocol.plugin.mission_mobility</span> <span class="kn">import</span> <span class="n">MissionMobilityPlugin</span><span class="p">,</span> <span class="n">MissionMobilityConfiguration</span><span class="p">,</span> <span class="n">LoopMission</span>
 </span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 </span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleSender</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="k">class</span> <span class="nc">SimpleSender</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
 </span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">SENSOR</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">UAV</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">GROUND_STATION</span> <span class="o">=</span> <span class="mi">2</span>
 </span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 </span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="k">class</span> <span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
 </span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="n">sender_type</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="n">sender</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
 </span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="k">def</span><span class="w"> </span><span class="nf">report_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">SimpleMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="k">def</span> <span class="nf">report_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">SimpleMessage</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 </span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    <span class="k">return</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received message with </span><span class="si">{</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;packet_count&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> packets from &quot;</span>
 </span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">SimpleSender</span><span class="p">(</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;sender_type&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">message</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
 </span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleSensorProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">class</span> <span class="nc">SimpleSensorProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
 </span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    <span class="n">_log</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 </span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 </span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
 </span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_packet</span><span class="p">()</span>
 </span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    <span class="k">def</span> <span class="nf">_generate_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">+=</span> <span class="mi">1</span>
 </span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated packet, current count </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">schedule_timer</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">current_time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_packet</span><span class="p">()</span>
 </span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report_message</span><span class="p">(</span><span class="n">simple_message</span><span class="p">))</span>
 </span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>
@@ -1941,10 +1765,10 @@
 </span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a>
 </span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a>    <span class="k">def</span> <span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>        <span class="k">pass</span>
 </span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final packet count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71" href="#__codelineno-0-71"></a>
 </span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72" href="#__codelineno-0-72"></a>
@@ -1968,14 +1792,14 @@
 </span><span id="__span-0-90"><a id="__codelineno-0-90" name="__codelineno-0-90" href="#__codelineno-0-90"></a><span class="p">]</span>
 </span><span id="__span-0-91"><a id="__codelineno-0-91" name="__codelineno-0-91" href="#__codelineno-0-91"></a>
 </span><span id="__span-0-92"><a id="__codelineno-0-92" name="__codelineno-0-92" href="#__codelineno-0-92"></a>
-</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleUAVProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+</span><span id="__span-0-93"><a id="__codelineno-0-93" name="__codelineno-0-93" href="#__codelineno-0-93"></a><span class="k">class</span> <span class="nc">SimpleUAVProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
 </span><span id="__span-0-94"><a id="__codelineno-0-94" name="__codelineno-0-94" href="#__codelineno-0-94"></a>    <span class="n">_log</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 </span><span id="__span-0-95"><a id="__codelineno-0-95" name="__codelineno-0-95" href="#__codelineno-0-95"></a>
 </span><span id="__span-0-96"><a id="__codelineno-0-96" name="__codelineno-0-96" href="#__codelineno-0-96"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-0-97"><a id="__codelineno-0-97" name="__codelineno-0-97" href="#__codelineno-0-97"></a>
 </span><span id="__span-0-98"><a id="__codelineno-0-98" name="__codelineno-0-98" href="#__codelineno-0-98"></a>    <span class="n">_mission</span><span class="p">:</span> <span class="n">MissionMobilityPlugin</span>
 </span><span id="__span-0-99"><a id="__codelineno-0-99" name="__codelineno-0-99" href="#__codelineno-0-99"></a>
-</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-100"><a id="__codelineno-0-100" name="__codelineno-0-100" href="#__codelineno-0-100"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-101"><a id="__codelineno-0-101" name="__codelineno-0-101" href="#__codelineno-0-101"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 </span><span id="__span-0-102"><a id="__codelineno-0-102" name="__codelineno-0-102" href="#__codelineno-0-102"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-103"><a id="__codelineno-0-103" name="__codelineno-0-103" href="#__codelineno-0-103"></a>
@@ -1987,7 +1811,7 @@
 </span><span id="__span-0-109"><a id="__codelineno-0-109" name="__codelineno-0-109" href="#__codelineno-0-109"></a>
 </span><span id="__span-0-110"><a id="__codelineno-0-110" name="__codelineno-0-110" href="#__codelineno-0-110"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_send_heartbeat</span><span class="p">()</span>
 </span><span id="__span-0-111"><a id="__codelineno-0-111" name="__codelineno-0-111" href="#__codelineno-0-111"></a>
-</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-112"><a id="__codelineno-0-112" name="__codelineno-0-112" href="#__codelineno-0-112"></a>    <span class="k">def</span> <span class="nf">_send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-113"><a id="__codelineno-0-113" name="__codelineno-0-113" href="#__codelineno-0-113"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending heartbeat, current count </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-114"><a id="__codelineno-0-114" name="__codelineno-0-114" href="#__codelineno-0-114"></a>
 </span><span id="__span-0-115"><a id="__codelineno-0-115" name="__codelineno-0-115" href="#__codelineno-0-115"></a>        <span class="n">message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="p">{</span>
@@ -2000,10 +1824,10 @@
 </span><span id="__span-0-122"><a id="__codelineno-0-122" name="__codelineno-0-122" href="#__codelineno-0-122"></a>
 </span><span id="__span-0-123"><a id="__codelineno-0-123" name="__codelineno-0-123" href="#__codelineno-0-123"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">schedule_timer</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">current_time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-0-124"><a id="__codelineno-0-124" name="__codelineno-0-124" href="#__codelineno-0-124"></a>
-</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-125"><a id="__codelineno-0-125" name="__codelineno-0-125" href="#__codelineno-0-125"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-126"><a id="__codelineno-0-126" name="__codelineno-0-126" href="#__codelineno-0-126"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_send_heartbeat</span><span class="p">()</span>
 </span><span id="__span-0-127"><a id="__codelineno-0-127" name="__codelineno-0-127" href="#__codelineno-0-127"></a>
-</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-128"><a id="__codelineno-0-128" name="__codelineno-0-128" href="#__codelineno-0-128"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-129"><a id="__codelineno-0-129" name="__codelineno-0-129" href="#__codelineno-0-129"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-0-130"><a id="__codelineno-0-130" name="__codelineno-0-130" href="#__codelineno-0-130"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report_message</span><span class="p">(</span><span class="n">simple_message</span><span class="p">))</span>
 </span><span id="__span-0-131"><a id="__codelineno-0-131" name="__codelineno-0-131" href="#__codelineno-0-131"></a>
@@ -2015,25 +1839,25 @@
 </span><span id="__span-0-137"><a id="__codelineno-0-137" name="__codelineno-0-137" href="#__codelineno-0-137"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Received acknowledgment from ground station&quot;</span><span class="p">)</span>
 </span><span id="__span-0-138"><a id="__codelineno-0-138" name="__codelineno-0-138" href="#__codelineno-0-138"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-139"><a id="__codelineno-0-139" name="__codelineno-0-139" href="#__codelineno-0-139"></a>
-</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-140"><a id="__codelineno-0-140" name="__codelineno-0-140" href="#__codelineno-0-140"></a>    <span class="k">def</span> <span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-141"><a id="__codelineno-0-141" name="__codelineno-0-141" href="#__codelineno-0-141"></a>        <span class="k">pass</span>
 </span><span id="__span-0-142"><a id="__codelineno-0-142" name="__codelineno-0-142" href="#__codelineno-0-142"></a>
-</span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-143"><a id="__codelineno-0-143" name="__codelineno-0-143" href="#__codelineno-0-143"></a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-144"><a id="__codelineno-0-144" name="__codelineno-0-144" href="#__codelineno-0-144"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final packet count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-145"><a id="__codelineno-0-145" name="__codelineno-0-145" href="#__codelineno-0-145"></a>
 </span><span id="__span-0-146"><a id="__codelineno-0-146" name="__codelineno-0-146" href="#__codelineno-0-146"></a>
-</span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleGroundStationProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+</span><span id="__span-0-147"><a id="__codelineno-0-147" name="__codelineno-0-147" href="#__codelineno-0-147"></a><span class="k">class</span> <span class="nc">SimpleGroundStationProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
 </span><span id="__span-0-148"><a id="__codelineno-0-148" name="__codelineno-0-148" href="#__codelineno-0-148"></a>    <span class="n">_log</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 </span><span id="__span-0-149"><a id="__codelineno-0-149" name="__codelineno-0-149" href="#__codelineno-0-149"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-0-150"><a id="__codelineno-0-150" name="__codelineno-0-150" href="#__codelineno-0-150"></a>
-</span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151" href="#__codelineno-0-151"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-151"><a id="__codelineno-0-151" name="__codelineno-0-151" href="#__codelineno-0-151"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-152"><a id="__codelineno-0-152" name="__codelineno-0-152" href="#__codelineno-0-152"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 </span><span id="__span-0-153"><a id="__codelineno-0-153" name="__codelineno-0-153" href="#__codelineno-0-153"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-0-154"><a id="__codelineno-0-154" name="__codelineno-0-154" href="#__codelineno-0-154"></a>
-</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155" href="#__codelineno-0-155"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-155"><a id="__codelineno-0-155" name="__codelineno-0-155" href="#__codelineno-0-155"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-156"><a id="__codelineno-0-156" name="__codelineno-0-156" href="#__codelineno-0-156"></a>        <span class="k">pass</span>
 </span><span id="__span-0-157"><a id="__codelineno-0-157" name="__codelineno-0-157" href="#__codelineno-0-157"></a>
-</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158" href="#__codelineno-0-158"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-158"><a id="__codelineno-0-158" name="__codelineno-0-158" href="#__codelineno-0-158"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-159"><a id="__codelineno-0-159" name="__codelineno-0-159" href="#__codelineno-0-159"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-0-160"><a id="__codelineno-0-160" name="__codelineno-0-160" href="#__codelineno-0-160"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report_message</span><span class="p">(</span><span class="n">simple_message</span><span class="p">))</span>
 </span><span id="__span-0-161"><a id="__codelineno-0-161" name="__codelineno-0-161" href="#__codelineno-0-161"></a>
@@ -2050,24 +1874,24 @@
 </span><span id="__span-0-172"><a id="__codelineno-0-172" name="__codelineno-0-172" href="#__codelineno-0-172"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">+=</span> <span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;packet_count&#39;</span><span class="p">]</span>
 </span><span id="__span-0-173"><a id="__codelineno-0-173" name="__codelineno-0-173" href="#__codelineno-0-173"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sent acknowledgment to UAV </span><span class="si">{</span><span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">. Current count </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-0-174"><a id="__codelineno-0-174" name="__codelineno-0-174" href="#__codelineno-0-174"></a>
-</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175" href="#__codelineno-0-175"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-175"><a id="__codelineno-0-175" name="__codelineno-0-175" href="#__codelineno-0-175"></a>    <span class="k">def</span> <span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-176"><a id="__codelineno-0-176" name="__codelineno-0-176" href="#__codelineno-0-176"></a>        <span class="k">pass</span>
 </span><span id="__span-0-177"><a id="__codelineno-0-177" name="__codelineno-0-177" href="#__codelineno-0-177"></a>
-</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178" href="#__codelineno-0-178"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-178"><a id="__codelineno-0-178" name="__codelineno-0-178" href="#__codelineno-0-178"></a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-0-179"><a id="__codelineno-0-179" name="__codelineno-0-179" href="#__codelineno-0-179"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final packet count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
 <details class="example">
 <summary>Full code needed to execute this example</summary>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.communication</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationHandler</span><span class="p">,</span> <span class="n">CommunicationMedium</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.mobility</span><span class="w"> </span><span class="kn">import</span> <span class="n">MobilityHandler</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.timer</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimerHandler</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisualizationHandler</span><span class="p">,</span> <span class="n">VisualizationConfiguration</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationBuilder</span><span class="p">,</span> <span class="n">SimulationConfiguration</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">simple_protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleSensorProtocol</span><span class="p">,</span> <span class="n">SimpleGroundStationProtocol</span><span class="p">,</span> <span class="n">SimpleUAVProtocol</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.communication</span> <span class="kn">import</span> <span class="n">CommunicationHandler</span><span class="p">,</span> <span class="n">CommunicationMedium</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.mobility</span> <span class="kn">import</span> <span class="n">MobilityHandler</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.timer</span> <span class="kn">import</span> <span class="n">TimerHandler</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.visualization</span> <span class="kn">import</span> <span class="n">VisualizationHandler</span><span class="p">,</span> <span class="n">VisualizationConfiguration</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.simulation</span> <span class="kn">import</span> <span class="n">SimulationBuilder</span><span class="p">,</span> <span class="n">SimulationConfiguration</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="kn">from</span> <span class="nn">simple_protocol</span> <span class="kn">import</span> <span class="n">SimpleSensorProtocol</span><span class="p">,</span> <span class="n">SimpleGroundStationProtocol</span><span class="p">,</span> <span class="n">SimpleUAVProtocol</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="c1"># Configuring simulation</span>
 </span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfiguration</span><span class="p">(</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="n">duration</span><span class="o">=</span><span class="mi">200</span>
@@ -2159,21 +1983,21 @@ We need to know the agent's <strong>packet count</strong> in order to implement 
 so it will be easy to present the code step-by-step. Let's first show the SimpleMessage implementation. Following
 our requirements we implemented the simple message as a dictionary. In order to have typing hints we create a <code>TypedDict</code>
 class containing the desired fields. GrADyS-SIM NextGen doesn't impose any </p>
-<div class="language-py highlight"><span class="filename">Message declaration</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<div class="language-py highlight"><span class="filename">Message declaration</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">class</span> <span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
 </span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">sender_type</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">sender</span><span class="p">:</span> <span class="nb">int</span>
 </span></code></pre></div>
 <p>To identify the types of agents in our simulation we will use the <code>SimpleSender</code>
 enum shown below. </p>
-<div class="language-py highlight"><span class="filename">SimpleSender enum</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleSender</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="language-py highlight"><span class="filename">SimpleSender enum</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">class</span> <span class="nc">SimpleSender</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
 </span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">SENSOR</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">UAV</span> <span class="o">=</span> <span class="mi">1</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="n">GROUND_STATION</span> <span class="o">=</span> <span class="mi">2</span>
 </span></code></pre></div>
 <p>To help us with logging a <code>report_message</code> function is defined. It receives
 a SimpleMessage and appropriately logs it.</p>
-<div class="language-py highlight"><span class="filename">Message logging</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<div class="language-py highlight"><span class="filename">Message logging</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">class</span> <span class="nc">SimpleMessage</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
 </span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="n">sender_type</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">sender</span><span class="p">:</span> <span class="nb">int</span>
@@ -2184,16 +2008,16 @@ initialize method, we are storing the generated packets in the <code>self.packet
 packets are in storage. The <code>_generate_packet</code> method increments this counter by one and schedules a timer for  one
 second later. The <code>handle_timer</code> is called when this timer fires and in turn calls the <code>_generate_packet</code> method again.
 This creates an infinite loop which with a periodicity of 1 second increments the packet counter.</p>
-<div class="language-py highlight"><span class="filename">Sensor initialization and timer</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="language-py highlight"><span class="filename">Sensor initialization and timer</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
 </span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_packet</span><span class="p">()</span>
 </span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="k">def</span> <span class="nf">_generate_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">+=</span> <span class="mi">1</span>
 </span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">schedule_timer</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">current_time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_packet</span><span class="p">()</span>
 </span></code></pre></div>
 <p>Next we need to implement the interaction with other modules. The <code>handle_packet</code> method will be called when a message
@@ -2201,7 +2025,7 @@ is recieved from another module. This missage will be a SimpleMessage and needs 
 interaction in the sensor is with an UAV, so we will only implement that. The code below shows a snipped from the 
 <code>handle_packet</code> method. After receiving a message from a UAV the sensor will send every one of its packets to the UAV
 and zero out the <code>self.packet_count</code> counter.</p>
-<div class="language-py highlight"><span class="filename">Sensor interactions</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="language-py highlight"><span class="filename">Sensor interactions</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
 </span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>        <span class="k">if</span> <span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;sender_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SimpleSender</span><span class="o">.</span><span class="n">UAV</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -2220,25 +2044,25 @@ and zero out the <code>self.packet_count</code> counter.</p>
 </span></code></pre></div>
 <details class="example">
 <summary>Full sensor code</summary>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleSensorProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">class</span> <span class="nc">SimpleSensorProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    <span class="n">_log</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 </span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 </span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
 </span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_packet</span><span class="p">()</span>
 </span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_generate_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    <span class="k">def</span> <span class="nf">_generate_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">+=</span> <span class="mi">1</span>
 </span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated packet, current count </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-10-14"><a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">schedule_timer</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">current_time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-10-15"><a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
-</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-10-16"><a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-10-17"><a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_packet</span><span class="p">()</span>
 </span><span id="__span-10-18"><a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-10-19"><a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-10-20"><a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-10-21"><a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report_message</span><span class="p">(</span><span class="n">simple_message</span><span class="p">))</span>
 </span><span id="__span-10-22"><a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
@@ -2256,10 +2080,10 @@ and zero out the <code>self.packet_count</code> counter.</p>
 </span><span id="__span-10-34"><a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>
 </span><span id="__span-10-35"><a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-10-36"><a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>
-</span><span id="__span-10-37"><a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-10-37"><a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>    <span class="k">def</span> <span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-10-38"><a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>        <span class="k">pass</span>
 </span><span id="__span-10-39"><a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>
-</span><span id="__span-10-40"><a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-10-40"><a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-10-41"><a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final packet count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
@@ -2270,10 +2094,10 @@ storing the number of packets that have been delivered to the ground station and
 method. The handling behaviour only cares about messages that came from UAVs, when received the ground station adds the
 packets the UAV contains to its packet count and sends a message back to the UAV, so it can know his packets have been
 delivered.</p>
-<div class="language-py highlight"><span class="filename">Ground station initialization and interactions</span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="language-py highlight"><span class="filename">Ground station initialization and interactions</span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="k">if</span> <span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;sender_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SimpleSender</span><span class="o">.</span><span class="n">UAV</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -2290,18 +2114,18 @@ delivered.</p>
 </span></code></pre></div>
 <details class="example">
 <summary>Full ground station code</summary>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleGroundStationProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">class</span> <span class="nc">SimpleGroundStationProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="n">_log</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
-</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 </span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
-</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>        <span class="k">pass</span>
 </span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report_message</span><span class="p">(</span><span class="n">simple_message</span><span class="p">))</span>
 </span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>
@@ -2318,10 +2142,10 @@ delivered.</p>
 </span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">+=</span> <span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;packet_count&#39;</span><span class="p">]</span>
 </span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sent acknowledgment to UAV </span><span class="si">{</span><span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;sender&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">. Current count </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
-</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    <span class="k">def</span> <span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>        <span class="k">pass</span>
 </span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>
-</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final packet count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
@@ -2331,11 +2155,11 @@ to periodically broadcast the number of packets it has to initiate interactions 
 illustrates the protocol's initialization and this timer, it is implemented in a similar way to the sensor packet 
 generation timer. The <code>_send_heartbeat</code> function implements a recurrent timer with a periodicity of 1 second that 
 broadcasts the message.</p>
-<div class="language-py highlight"><span class="filename">UAV initialization and timer</span><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="language-py highlight"><span class="filename">UAV initialization and timer</span><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_send_heartbeat</span><span class="p">()</span>
 </span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="k">def</span> <span class="nf">_send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="n">message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="p">{</span>
 </span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>            <span class="s1">&#39;packet_count&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="p">,</span>
 </span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>            <span class="s1">&#39;sender_type&#39;</span><span class="p">:</span> <span class="n">SimpleSender</span><span class="o">.</span><span class="n">UAV</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
@@ -2382,7 +2206,7 @@ the ground.</p>
 that one of our messages has been received, and it is sending us its packets, in that case we accept them and add them
 to our <code>self.packet_count</code> property. If a message is received from the ground station it means that we have succesfully
 delivered our packets to it, and we should discard them. The snippet below shows this behaviour.</p>
-<div class="language-py highlight"><span class="filename">UAV interactions</span><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="language-py highlight"><span class="filename">UAV interactions</span><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>        <span class="k">if</span> <span class="n">simple_message</span><span class="p">[</span><span class="s1">&#39;sender_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">SimpleSender</span><span class="o">.</span><span class="n">SENSOR</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -2412,14 +2236,14 @@ delivered our packets to it, and we should discard them. The snippet below shows
 </span><span id="__span-17-18"><a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="p">]</span>
 </span><span id="__span-17-19"><a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>
 </span><span id="__span-17-20"><a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>
-</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="k">class</span><span class="w"> </span><span class="nc">SimpleUAVProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
+</span><span id="__span-17-21"><a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="k">class</span> <span class="nc">SimpleUAVProtocol</span><span class="p">(</span><span class="n">IProtocol</span><span class="p">):</span>
 </span><span id="__span-17-22"><a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>    <span class="n">_log</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 </span><span id="__span-17-23"><a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>
 </span><span id="__span-17-24"><a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>    <span class="n">packet_count</span><span class="p">:</span> <span class="nb">int</span>
 </span><span id="__span-17-25"><a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>
 </span><span id="__span-17-26"><a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>    <span class="n">_mission</span><span class="p">:</span> <span class="n">MissionMobilityPlugin</span>
 </span><span id="__span-17-27"><a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>
-</span><span id="__span-17-28"><a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-28"><a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-17-29"><a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
 </span><span id="__span-17-30"><a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-17-31"><a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>
@@ -2431,7 +2255,7 @@ delivered our packets to it, and we should discard them. The snippet below shows
 </span><span id="__span-17-37"><a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>
 </span><span id="__span-17-38"><a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_send_heartbeat</span><span class="p">()</span>
 </span><span id="__span-17-39"><a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>
-</span><span id="__span-17-40"><a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-40"><a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>    <span class="k">def</span> <span class="nf">_send_heartbeat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-17-41"><a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending heartbeat, current count </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span><span id="__span-17-42"><a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>
 </span><span id="__span-17-43"><a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>        <span class="n">message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="p">{</span>
@@ -2444,10 +2268,10 @@ delivered our packets to it, and we should discard them. The snippet below shows
 </span><span id="__span-17-50"><a id="__codelineno-17-50" name="__codelineno-17-50" href="#__codelineno-17-50"></a>
 </span><span id="__span-17-51"><a id="__codelineno-17-51" name="__codelineno-17-51" href="#__codelineno-17-51"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">schedule_timer</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">provider</span><span class="o">.</span><span class="n">current_time</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </span><span id="__span-17-52"><a id="__codelineno-17-52" name="__codelineno-17-52" href="#__codelineno-17-52"></a>
-</span><span id="__span-17-53"><a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-53"><a id="__codelineno-17-53" name="__codelineno-17-53" href="#__codelineno-17-53"></a>    <span class="k">def</span> <span class="nf">handle_timer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timer</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-17-54"><a id="__codelineno-17-54" name="__codelineno-17-54" href="#__codelineno-17-54"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_send_heartbeat</span><span class="p">()</span>
 </span><span id="__span-17-55"><a id="__codelineno-17-55" name="__codelineno-17-55" href="#__codelineno-17-55"></a>
-</span><span id="__span-17-56"><a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-56"><a id="__codelineno-17-56" name="__codelineno-17-56" href="#__codelineno-17-56"></a>    <span class="k">def</span> <span class="nf">handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-17-57"><a id="__codelineno-17-57" name="__codelineno-17-57" href="#__codelineno-17-57"></a>        <span class="n">simple_message</span><span class="p">:</span> <span class="n">SimpleMessage</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
 </span><span id="__span-17-58"><a id="__codelineno-17-58" name="__codelineno-17-58" href="#__codelineno-17-58"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">report_message</span><span class="p">(</span><span class="n">simple_message</span><span class="p">))</span>
 </span><span id="__span-17-59"><a id="__codelineno-17-59" name="__codelineno-17-59" href="#__codelineno-17-59"></a>
@@ -2459,10 +2283,10 @@ delivered our packets to it, and we should discard them. The snippet below shows
 </span><span id="__span-17-65"><a id="__codelineno-17-65" name="__codelineno-17-65" href="#__codelineno-17-65"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Received acknowledgment from ground station&quot;</span><span class="p">)</span>
 </span><span id="__span-17-66"><a id="__codelineno-17-66" name="__codelineno-17-66" href="#__codelineno-17-66"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span id="__span-17-67"><a id="__codelineno-17-67" name="__codelineno-17-67" href="#__codelineno-17-67"></a>
-</span><span id="__span-17-68"><a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-68"><a id="__codelineno-17-68" name="__codelineno-17-68" href="#__codelineno-17-68"></a>    <span class="k">def</span> <span class="nf">handle_telemetry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">telemetry</span><span class="p">:</span> <span class="n">Telemetry</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-17-69"><a id="__codelineno-17-69" name="__codelineno-17-69" href="#__codelineno-17-69"></a>        <span class="k">pass</span>
 </span><span id="__span-17-70"><a id="__codelineno-17-70" name="__codelineno-17-70" href="#__codelineno-17-70"></a>
-</span><span id="__span-17-71"><a id="__codelineno-17-71" name="__codelineno-17-71" href="#__codelineno-17-71"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-17-71"><a id="__codelineno-17-71" name="__codelineno-17-71" href="#__codelineno-17-71"></a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 </span><span id="__span-17-72"><a id="__codelineno-17-72" name="__codelineno-17-72" href="#__codelineno-17-72"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Final packet count: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">packet_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </span></code></pre></div>
 </details>
@@ -2477,15 +2301,15 @@ protocol. These protocols, for example, would have issues in integrated-mode as 
 and all our UAVs send messages exactly every 1 second. A simple way to fix this would be introducing a small random
 delay to UAV messages. This is an example of how having varied environments can help you build more robust protocols.</p>
 </div>
-<div class="language-py highlight"><span class="filename">Execution code for prototype-mode</span><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.communication</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationHandler</span><span class="p">,</span> <span class="n">CommunicationMedium</span>
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.mobility</span><span class="w"> </span><span class="kn">import</span> <span class="n">MobilityHandler</span>
-</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.timer</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimerHandler</span>
-</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.handler.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">VisualizationHandler</span><span class="p">,</span> <span class="n">VisualizationConfiguration</span>
-</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">gradysim.simulator.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationBuilder</span><span class="p">,</span> <span class="n">SimulationConfiguration</span>
-</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">simple_protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimpleSensorProtocol</span><span class="p">,</span> <span class="n">SimpleGroundStationProtocol</span><span class="p">,</span> <span class="n">SimpleUAVProtocol</span>
+<div class="language-py highlight"><span class="filename">Execution code for prototype-mode</span><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.communication</span> <span class="kn">import</span> <span class="n">CommunicationHandler</span><span class="p">,</span> <span class="n">CommunicationMedium</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.mobility</span> <span class="kn">import</span> <span class="n">MobilityHandler</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.timer</span> <span class="kn">import</span> <span class="n">TimerHandler</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.handler.visualization</span> <span class="kn">import</span> <span class="n">VisualizationHandler</span><span class="p">,</span> <span class="n">VisualizationConfiguration</span>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="kn">from</span> <span class="nn">gradysim.simulator.simulation</span> <span class="kn">import</span> <span class="n">SimulationBuilder</span><span class="p">,</span> <span class="n">SimulationConfiguration</span>
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="kn">from</span> <span class="nn">simple_protocol</span> <span class="kn">import</span> <span class="n">SimpleSensorProtocol</span><span class="p">,</span> <span class="n">SimpleGroundStationProtocol</span><span class="p">,</span> <span class="n">SimpleUAVProtocol</span>
 </span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>
 </span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
-</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 </span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>    <span class="c1"># Configuring simulation</span>
 </span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>    <span class="n">config</span> <span class="o">=</span> <span class="n">SimulationConfiguration</span><span class="p">(</span>
 </span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>        <span class="n">duration</span><span class="o">=</span><span class="mi">200</span>
@@ -2561,19 +2385,11 @@ packets were delivered to the ground station by them.</p>
 
 
 
-
-
-
-
-
-
-
                 
               </article>
             </div>
           
           
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
       </main>
@@ -2588,7 +2404,7 @@ packets were delivered to the ground station by them.</p>
           <a href="../1_creating/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Creating a protocol">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
@@ -2602,18 +2418,18 @@ packets were delivered to the ground station by them.</p>
         
         
           
-          <a href="../3_extending/" class="md-footer__link md-footer__link--next" aria-label="Next: Extending the Simulation">
+          <a href="../3_raft_consensus/" class="md-footer__link md-footer__link--next" aria-label="Next: RAFT Consensus Plugin">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Extending the Simulation
+                RAFT Consensus Plugin
               </div>
             </div>
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
             </div>
           </a>
         
@@ -2642,12 +2458,10 @@ packets were delivered to the ground station by them.</p>
     </div>
     
     
-    
-      
-      <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "navigation.footer", "navigation.instant"], "search": "../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "navigation.footer", "navigation.instant"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.aecac24b.min.js"></script>
       
     
   </body>

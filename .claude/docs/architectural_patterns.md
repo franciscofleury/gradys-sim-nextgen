@@ -39,6 +39,7 @@ Concrete handlers:
 - `CommunicationHandler` (`gradysim/simulator/handler/communication.py:103-203`)
 - `VisualizationHandler` (`gradysim/simulator/handler/visualization.py`)
 - `AssertionHandler` (`gradysim/simulator/handler/assertion.py`)
+- `HttpCommunicationHandler` (`gradysim/simulator/handler/http_communication.py:41-247`)
 
 ## Command Pattern
 
@@ -72,6 +73,7 @@ All configuration uses `@dataclass` with defaults:
 - `CommunicationMedium` (`gradysim/simulator/handler/communication.py:76-88`)
 - `RandomMobilityConfig` (`gradysim/protocol/plugin/random_mobility.py:17-37`)
 - `MissionMobilityConfiguration` (`gradysim/protocol/plugin/mission_mobility.py:19-36`)
+- `HttpCommunicationConfiguration` (`gradysim/simulator/handler/http_communication.py:23-33`)
 
 Pattern: dataclass with all-default fields, passed to handler/plugin constructor.
 
@@ -85,9 +87,20 @@ Three phases managed by `Simulator` (`gradysim/simulator/simulation.py:188-236`)
 
 Async handlers are supported — the simulator checks `asyncio.iscoroutinefunction()` and awaits if needed.
 
+## Cross-Simulation HTTP Bridge
+
+The `HttpCommunicationHandler` introduces an HTTP bridge pattern for inter-simulation communication:
+
+- **Architecture**: a single FastAPI/uvicorn server per simulation, started in a daemon thread during `initialize()`
+- **Endpoints**: `POST /send_message` (body: `{"node_id": int, "message": str}`) and `GET /get_messages?node_id=X` (returns and clears queued messages)
+- **Thread safety**: GIL-protected list operations (`append`/`clear`) between the uvicorn thread and the simulation thread
+- **External sends**: fire-and-forget `requests.post()` calls in daemon threads to avoid blocking the event loop
+- **ID resolution**: `_resolve_destination()` maps a global ID to either `("internal", local_id)` or `("external", url, remote_local_id)`
+
 ## Testing Conventions
 
 - **Unit tests**: `unittest.TestCase` in `tests/test_*.py`. Setup via helper factory functions (e.g., `setup_mobility_handler()` returns `(event_loop, handler)` tuple).
 - **Integration tests**: `tests/integration/test_samples.py` uses `@pytest.mark.parametrize` to run all showcases with `_ForceFastExecution()` context manager.
 - **Mocks**: `DummyProtocol` / `DummyEncapsulator` classes implement required interfaces with minimal logic. State captured via `nonlocal` variables.
 - **Assertions**: Runtime property checking via decorators `@assert_always_true_for_simulation()` and `@assert_always_true_for_protocol()` (`gradysim/simulator/handler/assertion.py`).
+- **HTTP handler tests** (`tests/test_http_communication_handler.py`): 17 sync `unittest.TestCase` tests for command logic, ID resolution, and external sends + 4 async `IsolatedAsyncioTestCase` tests for endpoint verification with a live server.

@@ -38,6 +38,8 @@ Defined in `gradysim/protocol/messages/communication.py`. All messages are **str
 
 Communication is range-limited by `CommunicationMedium` (configured at simulation setup).
 
+`HttpCommunicationHandler` is a drop-in replacement for `CommunicationHandler` (same label: `"communication"`), with additional HTTP-based delivery and cross-simulation capabilities.
+
 ## Mobility
 
 Defined in `gradysim/protocol/messages/mobility.py`. Position type: `Tuple[float, float, float]` (x, y, z).
@@ -80,6 +82,7 @@ Use `SimulationBuilder` (`gradysim/simulator/simulation.py:382`):
 | `MobilityHandler` | `gradysim.simulator.handler.mobility` | `send_mobility_command()` + telemetry |
 | `VisualizationHandler` | `gradysim.simulator.handler.visualization` | 3D WebSocket visualization |
 | `AssertionHandler` | `gradysim.simulator.handler.assertion` | Runtime property assertions |
+| `HttpCommunicationHandler` | `gradysim.simulator.handler.http_communication` | `send_communication_command()` via HTTP + cross-simulation |
 
 ### SimulationConfiguration Options
 
@@ -101,6 +104,28 @@ Pass to `CommunicationHandler(medium)` to configure the network:
 | `transmission_range` | `float` | `60` | Max range in meters for message delivery |
 | `delay` | `float` | `0` | Network delay in seconds |
 | `failure_rate` | `float` | `0` | Message failure probability (0–1) |
+
+### HttpCommunicationConfiguration Options
+
+Pass to `HttpCommunicationHandler(configuration)` to configure HTTP-based communication:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `port` | `int` | `8000` | Port for this simulation's FastAPI server |
+| `poll_rate` | `float` | `0.1` | Seconds between polling for incoming messages (simulation time) |
+| `external_networks` | `List[Tuple[int, str]]` | `[]` | List of `(num_nodes, url)` tuples for remote simulations |
+
+### Cross-Simulation Communication
+
+The `HttpCommunicationHandler` supports linking multiple independent GrADyS simulations over HTTP:
+
+- **External networks**: configured via `external_networks` as `(num_nodes, url)` tuples, where `url` points to the remote simulation's HTTP server
+- **ID assignment**: external node IDs start at `len(internal_nodes)`, assigned sequentially across networks in configuration order
+- **ID remapping**: protocols use global IDs; the handler remaps to local IDs (0..N-1) on outbound POST requests
+- **Push-only model**: this simulation POSTs to remote simulations' `/send_message` endpoint; remote simulations POST to this simulation's `/send_message`
+- **Broadcast behavior**: sends to all internal nodes (except sender) plus all external nodes across all configured networks
+- **Sender identity**: not tracked by the handler; the protocol is responsible for encoding sender info in the message payload
+- **Internal delivery**: uses in-memory queues with no HTTP overhead for same-process messages
 
 ## Reference Showcases
 

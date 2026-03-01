@@ -9,25 +9,25 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../3_raft_consensus/">
       
       
-        <link rel="next" href="../../../Modules/Encapsulator/">
+        <link rel="next" href="1_extending/">
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.20">
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.4.6">
     
     
       
-        <title>Communication - GrADyS-SIM NextGen</title>
+        <title>Introduction - GrADyS-SIM NextGen</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.e53b48f4.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.35e1ed30.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.356b1318.min.css">
       
       
 
@@ -46,9 +46,9 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -66,10 +66,16 @@
     <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="indigo">
   
     
+    
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
+      
+        
+        <a href="#introduction" class="md-skip">
+          Skip to content
+        </a>
       
     </div>
     <div data-md-component="announce">
@@ -83,15 +89,15 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="GrADyS-SIM NextGen" class="md-header__button md-logo" aria-label="GrADyS-SIM NextGen" data-md-component="logo">
+    <a href="../.." title="GrADyS-SIM NextGen" class="md-header__button md-logo" aria-label="GrADyS-SIM NextGen" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -103,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Communication
+              Introduction
             
           </span>
         </div>
@@ -114,35 +120,32 @@
     
     
     
-    
-      
-      
-        <label class="md-header__button md-icon" for="__search">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        </label>
-        <div class="md-search" data-md-component="search" role="dialog">
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
       <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
         
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
       <nav class="md-search__options" aria-label="Search">
         
         <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+      <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -153,14 +156,13 @@
     </div>
   </div>
 </div>
-      
     
     
       <div class="md-header__source">
         <a href="https://github.com/Project-GrADyS/gradys-sim-nextgen" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -193,10 +195,10 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="GrADyS-SIM NextGen" class="md-nav__button md-logo" aria-label="GrADyS-SIM NextGen" data-md-component="logo">
+    <a href="../.." title="GrADyS-SIM NextGen" class="md-nav__button md-logo" aria-label="GrADyS-SIM NextGen" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
 
     </a>
     GrADyS-SIM NextGen
@@ -206,7 +208,7 @@
       <a href="https://github.com/Project-GrADyS/gradys-sim-nextgen" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
   </div>
   <div class="md-source__repository">
     GitHub
@@ -221,15 +223,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -240,18 +239,15 @@
     
       
       
-  
   
   
   
     <li class="md-nav__item">
-      <a href="../../../framework/" class="md-nav__link">
+      <a href="../../framework/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     What's included?
-    
   </span>
   
 
@@ -262,7 +258,6 @@
     
       
       
-  
   
   
   
@@ -275,16 +270,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Getting Started
-    
   </span>
   
 
@@ -303,15 +297,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Getting%20Started/execution/" class="md-nav__link">
+      <a href="../../Getting%20Started/execution/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Execution Modes
-    
   </span>
   
 
@@ -326,15 +317,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Getting%20Started/setup/" class="md-nav__link">
+      <a href="../../Getting%20Started/setup/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Quick Setup
-    
   </span>
   
 
@@ -358,7 +346,6 @@
     
   
   
-  
     
     
     
@@ -368,16 +355,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
           <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Guides
-    
   </span>
   
 
@@ -396,15 +382,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../1_creating/" class="md-nav__link">
+      <a href="../1_creating/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Creating a protocol
-    
   </span>
   
 
@@ -419,15 +402,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../2_simple/" class="md-nav__link">
+      <a href="../2_simple/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Simulating a data collection scenario
-    
   </span>
   
 
@@ -442,38 +422,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../3_extending/" class="md-nav__link">
+      <a href="../3_raft_consensus/" class="md-nav__link">
         
-  
-  
-  <span class="md-ellipsis">
-    Extending the Simulation
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../4_raft_consensus/" class="md-nav__link">
-        
-  
   
   <span class="md-ellipsis">
     RAFT Consensus Plugin
-    
   </span>
   
 
@@ -488,7 +442,6 @@
   
   
     
-  
   
   
     
@@ -500,26 +453,25 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" checked>
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
-    Prototype Mode
-    
+    Python Simulator
   </span>
   
 
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_5">
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_4">
             <span class="md-nav__icon md-icon"></span>
-            Prototype Mode
+            Python Simulator
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -527,16 +479,101 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
         
-  
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
   
   <span class="md-ellipsis">
     Introduction
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
     
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-the-python-simulator" class="md-nav__link">
+    Why use the Python Simulator?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-it-work" class="md-nav__link">
+    How does it work?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-concepts" class="md-nav__link">
+    Important concepts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    Architecture
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="1_extending/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Extending the Simulation (Camera Extension)
   </span>
   
 
@@ -550,28 +587,17 @@
                 
   
   
-    
   
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="2_radio/" class="md-nav__link">
         
   
-  
   <span class="md-ellipsis">
-    Communication
-    
+    Multi-radio systems (Radio Extension)
   </span>
   
 
       </a>
-      
     </li>
   
 
@@ -594,7 +620,6 @@
     
       
       
-  
   
   
   
@@ -607,16 +632,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Modules
-    
   </span>
   
 
@@ -635,7 +659,6 @@
   
   
   
-  
     
     
     
@@ -645,16 +668,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
         
           
           <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Encapsulator
-    
   </span>
   
 
@@ -673,15 +695,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Encapsulator/" class="md-nav__link">
+      <a href="../../Modules/Encapsulator/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -696,15 +715,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Encapsulator/interop/" class="md-nav__link">
+      <a href="../../Modules/Encapsulator/interop/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Interop
-    
   </span>
   
 
@@ -719,15 +735,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Encapsulator/python/" class="md-nav__link">
+      <a href="../../Modules/Encapsulator/python/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Python
-    
   </span>
   
 
@@ -750,7 +763,6 @@
   
   
   
-  
     
     
     
@@ -760,16 +772,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
         
           
           <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Protocol
-    
   </span>
   
 
@@ -788,15 +799,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/" class="md-nav__link">
+      <a href="../../Modules/Protocol/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -808,18 +816,15 @@
             
               
                 
-  
   
   
   
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/position/" class="md-nav__link">
+      <a href="../../Modules/Protocol/position/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Position
-    
   </span>
   
 
@@ -831,7 +836,6 @@
             
               
                 
-  
   
   
   
@@ -844,16 +848,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_3" >
         
           
           <label class="md-nav__link" for="__nav_5_2_3" id="__nav_5_2_3_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Messages
-    
   </span>
   
 
@@ -872,15 +875,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/messages/" class="md-nav__link">
+      <a href="../../Modules/Protocol/messages/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -895,15 +895,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/messages/communication/" class="md-nav__link">
+      <a href="../../Modules/Protocol/messages/communication/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Communication
-    
   </span>
   
 
@@ -918,15 +915,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/messages/mobility/" class="md-nav__link">
+      <a href="../../Modules/Protocol/messages/mobility/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Mobility
-    
   </span>
   
 
@@ -949,7 +943,6 @@
   
   
   
-  
     
     
     
@@ -959,16 +952,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2_4" >
         
           
           <label class="md-nav__link" for="__nav_5_2_4" id="__nav_5_2_4_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Plugins
-    
   </span>
   
 
@@ -987,15 +979,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/" class="md-nav__link">
+      <a href="../../Modules/Protocol/plugins/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1010,15 +999,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/dispatcher/" class="md-nav__link">
+      <a href="../../Modules/Protocol/plugins/dispatcher/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Dispatcher
-    
   </span>
   
 
@@ -1033,15 +1019,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/follow_mobility/" class="md-nav__link">
+      <a href="../../Modules/Protocol/plugins/follow_mobility/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Follow Mobility
-    
   </span>
   
 
@@ -1056,15 +1039,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/mission_mobility/" class="md-nav__link">
+      <a href="../../Modules/Protocol/plugins/mission_mobility/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Mission Mobility
-    
   </span>
   
 
@@ -1079,38 +1059,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/radio/" class="md-nav__link">
+      <a href="../../Modules/Protocol/plugins/raft/" class="md-nav__link">
         
-  
-  
-  <span class="md-ellipsis">
-    Radio
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/raft/" class="md-nav__link">
-        
-  
   
   <span class="md-ellipsis">
     RAFT Consensus
-    
   </span>
   
 
@@ -1122,18 +1076,15 @@
             
               
                 
-  
   
   
   
     <li class="md-nav__item">
-      <a href="../../../Modules/Protocol/plugins/random_mobility/" class="md-nav__link">
+      <a href="../../Modules/Protocol/plugins/random_mobility/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Random Mobility
-    
   </span>
   
 
@@ -1161,7 +1112,6 @@
             
               
                 
-  
   
   
   
@@ -1174,16 +1124,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
         
           
           <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Simulator
-    
   </span>
   
 
@@ -1202,15 +1151,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/" class="md-nav__link">
+      <a href="../../Modules/Simulator/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1225,15 +1171,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/event/" class="md-nav__link">
+      <a href="../../Modules/Simulator/event/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Event
-    
   </span>
   
 
@@ -1248,15 +1191,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/log/" class="md-nav__link">
+      <a href="../../Modules/Simulator/log/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Log
-    
   </span>
   
 
@@ -1271,15 +1211,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/node/" class="md-nav__link">
+      <a href="../../Modules/Simulator/node/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Node
-    
   </span>
   
 
@@ -1291,18 +1228,15 @@
             
               
                 
-  
   
   
   
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/simulation/" class="md-nav__link">
+      <a href="../../Modules/Simulator/simulation/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Simulation
-    
   </span>
   
 
@@ -1314,7 +1248,6 @@
             
               
                 
-  
   
   
   
@@ -1327,16 +1260,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3_6" >
         
           
           <label class="md-nav__link" for="__nav_5_3_6" id="__nav_5_3_6_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Extension
-    
   </span>
   
 
@@ -1355,15 +1287,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/Extension/" class="md-nav__link">
+      <a href="../../Modules/Simulator/Extension/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1378,15 +1307,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/Extension/camera/" class="md-nav__link">
+      <a href="../../Modules/Simulator/Extension/camera/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Camera
-    
   </span>
   
 
@@ -1401,15 +1327,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/Extension/communication_controller/" class="md-nav__link">
+      <a href="../../Modules/Simulator/Extension/radio/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
-    Communication controller
-    
+    Radio
   </span>
   
 
@@ -1424,15 +1347,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/Extension/visualization_controller/" class="md-nav__link">
+      <a href="../../Modules/Simulator/Extension/visualization_controller/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Visualization controller
-    
   </span>
   
 
@@ -1455,7 +1375,6 @@
   
   
   
-  
     
     
     
@@ -1465,16 +1384,15 @@
       
         
         
+        
         <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3_7" >
         
           
           <label class="md-nav__link" for="__nav_5_3_7" id="__nav_5_3_7_label" tabindex="0">
             
   
-  
   <span class="md-ellipsis">
     Handlers
-    
   </span>
   
 
@@ -1493,15 +1411,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/handlers/" class="md-nav__link">
+      <a href="../../Modules/Simulator/handlers/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Introduction
-    
   </span>
   
 
@@ -1516,15 +1431,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/handlers/assertion/" class="md-nav__link">
+      <a href="../../Modules/Simulator/handlers/assertion/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Assertion
-    
   </span>
   
 
@@ -1539,15 +1451,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/handlers/communication/" class="md-nav__link">
+      <a href="../../Modules/Simulator/handlers/communication/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Communication
-    
   </span>
   
 
@@ -1562,15 +1471,32 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/handlers/mobility/" class="md-nav__link">
+      <a href="../../Modules/Simulator/handlers/http_communication/" class="md-nav__link">
         
   
+  <span class="md-ellipsis">
+    Http communication
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Modules/Simulator/handlers/mobility/" class="md-nav__link">
+        
   
   <span class="md-ellipsis">
     Mobility
-    
   </span>
   
 
@@ -1585,15 +1511,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/handlers/timer/" class="md-nav__link">
+      <a href="../../Modules/Simulator/handlers/timer/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Timer
-    
   </span>
   
 
@@ -1608,15 +1531,12 @@
   
   
   
-  
     <li class="md-nav__item">
-      <a href="../../../Modules/Simulator/handlers/visualization/" class="md-nav__link">
+      <a href="../../Modules/Simulator/handlers/visualization/" class="md-nav__link">
         
-  
   
   <span class="md-ellipsis">
     Visualization
-    
   </span>
   
 
@@ -1666,6 +1586,44 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-use-the-python-simulator" class="md-nav__link">
+    Why use the Python Simulator?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-does-it-work" class="md-nav__link">
+    How does it work?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-concepts" class="md-nav__link">
+    Important concepts
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    Architecture
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1679,21 +1637,55 @@
                 
                   
 
-
   
   
 
 
-  <h1>Communication</h1>
-
-
-
-
-
-
-
-
-
+<h1 id="introduction">Introduction</h1>
+<p>The guides in this section will teach you details about the Python Simulator,
+which is part of the GrADyS-SIM NextGen framework. Simulations ran in this mode
+are said to be in <code>prototype mode</code>. </p>
+<h2 id="why-use-the-python-simulator">Why use the Python Simulator?</h2>
+<p>Use this simulator if you want quick iteration, easy setup, and a simple
+interface. This simulator is great for testing out new ideas and quickly
+prototyping new protocols. Don't let the word "prototype" fool you, this 
+simulator is still very powerful and can be used to simulate any protocol that 
+the other execution modes can. </p>
+<h2 id="how-does-it-work">How does it work?</h2>
+<p>The python simulator is an event-based simulator. This means that the simulator
+will simulate through the execution of events. Events can be any action that
+occurs in a specific timestamp. Events can represent messages being sent, 
+node's positions being updated or anything else. </p>
+<p>The event-loop is basically a heap of these events, where the top of the heap
+is the event that will be executed next, based on its timestamp. The simulator 
+will execute the event by calling its callback method. For implementation 
+details check out the <a class="autorefs autorefs-internal" href="../../Modules/Simulator/event/#event">Event</a> section.</p>
+<p>Every other component in the simulator is built on top of this event-based
+architecture. The simulator is very modular and extensible, so you can easily
+add new components to the simulator if you which to do it. The simulator is 
+extended through the creation of handlers. Handlers are merely classes with a
+reference to the event-loop and nodes in the simulation. They use these 
+references to implement some functionality. Check out the 
+<a href="../../Modules/Simulator/handlers/">Handler</a> section to learn more about handlers.</p>
+<p>Protocols do not directly have access to any of the simulator's components. 
+They indirectly interact with the simulator through the 
+<a class="autorefs autorefs-internal" title="Python" href="../../Modules/Encapsulator/python/#python">python encapsulator</a>.</p>
+<h2 id="important-concepts">Important concepts</h2>
+<p>Before you start using the simulator you should understand the following
+concepts:</p>
+<ul>
+<li>Event-loop: The event-loop is the central component of the simulator. It is
+  responsible for executing events in the correct order. Check out the 
+  <a class="autorefs autorefs-internal" href="../../Modules/Simulator/event/#event">Event</a> section to learn more about events.</li>
+<li>Event: Events are the building blocks of the simulator. They represent
+  actions that occur in a specific timestamp. Check out the <a class="autorefs autorefs-internal" href="../../Modules/Simulator/event/#event">Event</a>
+  section to learn more about events.</li>
+<li>Handler: Extensible interface to implement new functionality in the 
+  simulator. Check out the <a href="../../Modules/Simulator/handlers/">Handler</a> section to 
+  learn more about handlers.</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<p><img alt="Python Simulator Architecture" src="../../assets/simulator_architecture.svg" /></p>
 
 
 
@@ -1704,7 +1696,6 @@
             </div>
           
           
-<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
       </main>
@@ -1716,35 +1707,35 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Introduction">
+          <a href="../3_raft_consensus/" class="md-footer__link md-footer__link--prev" aria-label="Previous: RAFT Consensus Plugin">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Previous
               </span>
               <div class="md-ellipsis">
-                Introduction
+                RAFT Consensus Plugin
               </div>
             </div>
           </a>
         
         
           
-          <a href="../../../Modules/Encapsulator/" class="md-footer__link md-footer__link--next" aria-label="Next: Introduction">
+          <a href="1_extending/" class="md-footer__link md-footer__link--next" aria-label="Next: Extending the Simulation (Camera Extension)">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Introduction
+                Extending the Simulation (Camera Extension)
               </div>
             </div>
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
             </div>
           </a>
         
@@ -1773,12 +1764,10 @@
     </div>
     
     
-    
-      
-      <script id="__config" type="application/json">{"base": "../../..", "features": ["content.code.copy", "navigation.footer", "navigation.instant"], "search": "../../../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["content.code.copy", "navigation.footer", "navigation.instant"], "search": "../../assets/javascripts/workers/search.f886a092.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../../assets/javascripts/bundle.aecac24b.min.js"></script>
       
     
   </body>

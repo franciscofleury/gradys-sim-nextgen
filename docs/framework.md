@@ -68,11 +68,18 @@ extensions include different radio models, simulated hardware or others. It's
 important to note that unlike `plugins`, `extensions` work exclusively on the
 python simulated environment and cannot be used in other execution modes.
 
+The simulator also supports **cross-simulation communication** through the
+[HttpCommunicationHandler][gradysim.simulator.handler.http_communication.HttpCommunicationHandler].
+This handler enables multiple independent GrADyS simulations to exchange
+messages over HTTP, allowing you to model scenarios where separate groups of
+nodes (potentially running on different machines) need to communicate with each
+other through configurable external networks.
+
 !!!info
-    Both the [creating a protocol](./Guides/1_creating.md) and the 
+    Both the [creating a protocol](./Guides/1_creating.md) and the
     [implementation of a simulation scenario](./Guides/1_creating.md) guides use
-    the prototype-mode simulator to execute the protocols. You can read them to 
-    understand how to use this package. For a more in-depth view read the 
+    the prototype-mode simulator to execute the protocols. You can read them to
+    understand how to use this package. For a more in-depth view read the
     documentation for the `simulator` subpackage [here][gradysim.simulator].
 
 ### `encapsulator`

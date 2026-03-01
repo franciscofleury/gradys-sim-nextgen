@@ -6,6 +6,7 @@ Python discrete-event simulator for prototyping and testing distributed algorith
 
 - **Language**: Python 3.8–3.13
 - **Core dependency**: `websockets >= 12`
+- **HTTP communication**: `fastapi`, `uvicorn`, `requests` (required by `HttpCommunicationHandler`)
 - **Linting**: `ruff` (config: `ruff.toml`, line length 120)
 - **Testing**: `pytest` + `unittest`
 - **Docs**: `mkdocs` with Material theme + `mkdocstrings`
@@ -51,6 +52,7 @@ gradysim/                     # Main package
 │   │   ├── timer.py          # Timer scheduling
 │   │   ├── visualization.py  # 3D visualization via WebSocket
 │   │   ├── assertion.py      # Runtime assertions
+│   │   ├── http_communication.py  # HTTP-based communication + cross-simulation networking
 │   │   └── ardupilot_mobility.py  # Real UAV integration
 │   └── extension/            # Optional extensions (camera, radio)
 ├── encapsulator/             # Bridges protocols to execution environments
@@ -73,6 +75,7 @@ docs/                         # MkDocs source files
 - **Handler** (`INodeHandler`): Simulator-side component that processes protocol commands (communication, mobility, timers).
 - **Encapsulator**: Adapter layer that lets the same protocol run in different execution environments.
 - **Plugin**: Reusable protocol behavior attached via the dispatcher system (chain of responsibility).
+- **Cross-simulation communication**: `HttpCommunicationHandler` enables multiple GrADyS simulations to exchange messages over HTTP via configurable external networks.
 
 ## Testing Conventions
 
@@ -80,6 +83,7 @@ docs/                         # MkDocs source files
 - Integration tests in `tests/integration/test_samples.py` use `pytest.mark.parametrize` to run all showcases
 - Test mocks follow `DummyProtocol`/`DummyEncapsulator` pattern implementing required interfaces
 - Handlers are tested in isolation with their own event loop instance
+- HTTP handler tests use `IsolatedAsyncioTestCase` for endpoint verification and `unittest.mock.patch` for external HTTP assertions
 
 ## Additional Documentation
 

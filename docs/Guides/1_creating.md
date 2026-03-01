@@ -150,6 +150,12 @@ We can see that every node's timer fired 10 times, as expected from our last
 protocol. The interesting part is seeing that each node received 90 messages, 1 
 from every node other then itself 10 times.
 
+!!!tip
+    If you need nodes from **different simulations** to communicate with each other over HTTP,
+    you can use the [HttpCommunicationHandler][gradysim.simulator.handler.http_communication.HttpCommunicationHandler]
+    as a drop-in replacement for `CommunicationHandler`. It supports all the same local communication
+    features while also enabling cross-simulation message exchange through configurable external networks.
+
 ## Configuring the communication medium
 
 An important part of developing distributed systems is thinking about 
