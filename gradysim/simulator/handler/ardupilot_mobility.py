@@ -258,7 +258,7 @@ class Drone:
         self._logger.debug(f"[DRONE-{self._node_id}] Takeoff complete.")
 
         self._logger.debug(f"[DRONE-{self._node_id}] Going to start position...")
-        pos_data = {"x": self.position[0], "y": self.position[1], "z": -self.position[2]} # in this step we buld the json data and convert z in protocol frame to z in ned frame (downwars)
+        pos_data = {"x": self.position[0], "y": self.position[1], "z": -self.position[2]}
         go_to_result = await self.post("/movement/go_to_ned_wait", json=pos_data)
         if go_to_result.status_code != 200:
             raise(f"[DRONE-{self._node_id}] Failed to go to start position.")
@@ -446,23 +446,12 @@ class ArdupilotMobilityHandler(INodeHandler):
         Each drone has it's own routine and they run concurrently.
         """
         for node_id in self.nodes.keys():
-            print(node_id)
             http_session = aiohttp.ClientSession()
             drone = self.drones[node_id]
             drone.set_session(http_session)
 
         if self._configuration.simulate_drones:
             time.sleep(SITL_SLEEP_TIME) # Wait for API process to start
-            
-            # drone_speedup_sim_tasks = []
-            # for node_id in self.nodes.keys():
-            #     drone_speedup_sim_tasks.append(self.drones[node_id].set_sim_speedup(self._configuration.simulation_startup_speedup))
-                
-            # try:
-            #     await asyncio.gather(*drone_speedup_sim_tasks)
-            # except Exception as e:
-            #     print(e)
-            #     self._ardupilot_error(f"Error speeding up SITL simulation")
         
         drone_init_tasks = []
         for node_id in self.nodes.keys():
@@ -471,22 +460,11 @@ class ArdupilotMobilityHandler(INodeHandler):
         try:
             await asyncio.gather(*drone_init_tasks)  
         except Exception as e:
-            print(e)
+            self._logger.error(e)
             self._ardupilot_error(f"Error initializing drones.")
 
         if not self._configuration.simulate_drones:
             return
-        
-        # drone_reset_speedup_tasks = []
-        # for node_id in self.nodes.keys():
-        #     drone = self.drones[node_id]
-        #     drone_reset_speedup_tasks.append(asyncio.create_task(drone.set_simulation_speedup(1)))
-        
-        # try:
-        #     await asyncio.gather(*drone_reset_speedup_tasks)
-        # except Exception as e:
-        #     print(e)
-        #     self._ardupilot_error(f"Error reseting SITL simulation speedup")
     
     async def initialize(self):
         await self._initialize_drones() 
@@ -511,7 +489,7 @@ class ArdupilotMobilityHandler(INodeHandler):
                 try:
                     tasks.append(asyncio.create_task(drone.shutdown()))
                 except Exception as e:
-                    print(f"Error scheduling drone shutdown. {e}")
+                    self._logger.error(f"Error scheduling drone shutdown. {e}")
                     continue
             
             asyncio.gather(*tasks)
@@ -521,9 +499,9 @@ class ArdupilotMobilityHandler(INodeHandler):
                 drone = self.drones[node_id]
                 try:
                     shutdown_result = event_loop.run_until_complete(drone.shutdown())
-                    print(f"Shutdown_result: {shutdown_result}")
+                    self._logger.debug(f"Shutdown_result: {shutdown_result}")
                 except Exception as e:
-                    print(f"Error shutting down drone. {e}")
+                    self._logger.error(f"Error shutting down drone. {e}")
                     continue
         raise ArdupilotMobilityException(message)
 
@@ -608,7 +586,6 @@ class ArdupilotMobilityHandler(INodeHandler):
             csv_path = "ardupilot_mobility_report.csv"
             with open(csv_path, "w", newline="") as csvfile:
                 writer = csv.writer(csvfile)
-                # include node id for clarity plus the requested columns
                 writer.writerow(["node_id", "telemetry_requests", "telemetry_drops", "battery_wasted"])
                 for node_id in self.nodes.keys():
                     entry = self._report.get(node_id, {})
