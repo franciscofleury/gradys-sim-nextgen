@@ -37,7 +37,7 @@ def handle_timer_srt(protocol: IProtocol, timer: str) -> DispatchReturn:
             protocol.provider.current_time(), protocol.provider.tracked_variables
         )
 
-        protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + DATA_COLLECTION_INTERVAL)
+        protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + protocol._statistics_collection_interval)
         
         return DispatchReturn.INTERRUPT
 
@@ -71,8 +71,9 @@ class StatisticsProtocolWrapper:
 
     _statistics_time_list: List[Dict[str, Any]]
     _statistics_tracked_variables_list: List[Dict[str, Any]]
+    _statistics_collection_interval: float
 
-    def __init__(self, protocol: IProtocol, file_name_part: str):
+    def __init__(self, protocol: IProtocol, file_name_part: str, collection_interval: float):
         """
         Instantiates a protocol wrapper. Should not be instantiated directly, create a statistics using the
         [create_statistics][gradysim.protocol.plugin.statistics.create_statistics] method.
@@ -88,8 +89,9 @@ class StatisticsProtocolWrapper:
         self._id = file_name_part 
         self._statistics_time_list = []
         self._statistics_tracked_variables_list = []
+        self._statistics_collection_interval = collection_interval
 
-        protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + 0.1)
+        protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + self._statistics_collection_interval)
 
     def register(self):
         """
@@ -160,7 +162,7 @@ class StatisticsProtocolWrapper:
 _statistics_protocol_wrappers: Dict[IProtocol, StatisticsProtocolWrapper] = {}
 
 
-def create_statistics(protocol: IProtocol, file_name_part: str = "") -> StatisticsProtocolWrapper:
+def create_statistics(protocol: IProtocol, file_name_part: str = "", collection_interval: float = DATA_COLLECTION_INTERVAL) -> StatisticsProtocolWrapper:
     """
     Creates statistics which wraps a protocol instance and it's methods. Implements a call chain for each of the
     protocol interface's methods. The class returned from this function can be used to add functions to the call chain
@@ -183,7 +185,7 @@ def create_statistics(protocol: IProtocol, file_name_part: str = "") -> Statisti
 
     global _statistics_protocol_wrappers
     if protocol not in _statistics_protocol_wrappers:
-        _statistics_protocol_wrappers[protocol] = StatisticsProtocolWrapper(protocol, file_name_part)
+        _statistics_protocol_wrappers[protocol] = StatisticsProtocolWrapper(protocol, file_name_part, collection_interval)
 
     _statistics_protocol_wrappers[protocol].register()
 
