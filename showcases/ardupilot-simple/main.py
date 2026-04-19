@@ -3,6 +3,7 @@ import sys
 from gradysim.simulator.handler.communication import CommunicationHandler, CommunicationMedium
 from gradysim.simulator.handler.ardupilot_mobility import ArdupilotMobilityHandler, ArdupilotMobilityConfiguration
 from gradysim.simulator.handler.timer import TimerHandler
+from gradysim.simulator.handler.visualization import VisualizationHandler
 from gradysim.simulator.simulation import SimulationBuilder, SimulationConfiguration
 from protocol_sensor import SimpleProtocolSensor
 from protocol_mobile import SimpleProtocolMobile
@@ -26,6 +27,7 @@ def run_simulation(ardupilot_path: str):
         default_speed=10,
         generate_report=True
     )))
+    builder.add_handler(VisualizationHandler())
 
     # Ground station at origin
     builder.add_node(SimpleProtocolGround, (0, 0, 0))
