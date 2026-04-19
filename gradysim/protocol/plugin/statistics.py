@@ -21,8 +21,6 @@ from gradysim.protocol.interface import IProtocol
 DATA_COLLECTION_INTERVAL = 0.5
 
 
-
-
 def handle_packet_tv(protocol: IProtocol, message: str) -> DispatchReturn:
     """'
     Starts collection of tracked variables which are updated in handle packet
