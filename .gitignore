@@ -13,3 +13,5 @@ venv/**
 
 .claude
 CLAUDE.md
+
+site/**
