@@ -33,7 +33,7 @@ class SimpleProtocolMobile(IProtocol):
         )
 
         self.mission.start_mission(
-            mission=[(0, 0, 10), (100, 0, 10), (0, 0, 10)]
+            mission=[(100, 0, 20), (0, 0, 20)]
         )
 
         self.provider.tracked_variables["packets"] = self.packets

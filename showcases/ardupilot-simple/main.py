@@ -13,7 +13,6 @@ from protocol_ground import SimpleProtocolGround
 def run_simulation(ardupilot_path: str):
     builder = SimulationBuilder(SimulationConfiguration(
         duration=300,
-        debug=True,
         real_time=True
     ))
 
@@ -30,13 +29,13 @@ def run_simulation(ardupilot_path: str):
     builder.add_handler(VisualizationHandler())
 
     # Ground station at origin
-    builder.add_node(SimpleProtocolGround, (0, 0, 0))
+    builder.add_node(SimpleProtocolGround, (0, 0, 20))
 
     # Sensor located away from ground station
-    builder.add_node(SimpleProtocolSensor, (100, 0, 0))
+    builder.add_node(SimpleProtocolSensor, (100, 0, 20))
 
     # Drone that flies between ground station and sensor
-    builder.add_node(SimpleProtocolMobile, (0, 0, 0))
+    builder.add_node(SimpleProtocolMobile, (0, 0, 20))
 
     simulation = builder.build()
     simulation.start_simulation()
