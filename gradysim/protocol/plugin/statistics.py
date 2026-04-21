@@ -20,29 +20,7 @@ from gradysim.protocol.interface import IProtocol
 
 DATA_COLLECTION_INTERVAL = 0.5
 
-def handle_timer_srt(protocol: IProtocol, timer: str) -> DispatchReturn:
-    """'
-    Starts collection of statistics when a timer with a name 'statistics' is scheduled 
 
-    Args:
-        protocol: Protocol for which statistics should be collected
-        timer: The name of the scheduled timer if existent
-    """
-    if timer == "statistics":
-        _statistics_protocol_wrappers[protocol].update_srt_statistic(
-            protocol.provider.current_time(), time.time()
-        )
-
-        _statistics_protocol_wrappers[protocol].update_tracked_variable_statistic(
-            protocol.provider.current_time(), protocol.provider.tracked_variables
-        )
-
-        protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + protocol._statistics_collection_interval)
-        
-        return DispatchReturn.INTERRUPT
-
-    else:
-        return DispatchReturn.CONTINUE
 
 
 def handle_packet_tv(protocol: IProtocol, message: str) -> DispatchReturn:
@@ -93,13 +71,38 @@ class StatisticsProtocolWrapper:
 
         protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + self._statistics_collection_interval)
 
+    def handle_timer_srt(self, protocol: IProtocol, timer: str) -> DispatchReturn:
+        """'
+        Starts collection of statistics when a timer with a name 'statistics' is scheduled 
+
+        Args:
+            protocol: Protocol for which statistics should be collected
+            timer: The name of the scheduled timer if existent
+        """
+        if timer == "statistics":
+            _statistics_protocol_wrappers[protocol].update_srt_statistic(
+                protocol.provider.current_time(), time.time()
+            )
+
+            _statistics_protocol_wrappers[protocol].update_tracked_variable_statistic(
+                protocol.provider.current_time(), protocol.provider.tracked_variables
+            )
+
+            protocol.provider.schedule_timer("statistics", protocol.provider.current_time() + self._statistics_collection_interval)
+            
+            return DispatchReturn.INTERRUPT
+
+        else:
+            return DispatchReturn.CONTINUE
+
+
     def register(self):
         """
         Registers all the methods needed for collecting the statistics
         """
 
         # Simulation and real time
-        self._dispatcher.register_handle_timer(handle_timer_srt)
+        self._dispatcher.register_handle_timer(self.handle_timer_srt)
 
         # Tracked variables
         self._dispatcher.register_handle_packet(handle_packet_tv)
@@ -110,7 +113,7 @@ class StatisticsProtocolWrapper:
         """
 
         # Simulation and real time
-        self._dispatcher.unregister_handle_timer(handle_timer_srt)
+        self._dispatcher.unregister_handle_timer(self.handle_timer_srt)
 
         # Tracked variables
         self._dispatcher.unregister_handle_packet(handle_packet_tv)
