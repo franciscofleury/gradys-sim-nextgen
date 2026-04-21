@@ -15,7 +15,7 @@ from gradysim.simulator.event import EventLoop
 from gradysim.simulator.handler.interface import INodeHandler
 from gradysim.simulator.node import Node
 
-from uav_api.run_api import run_with_args
+from uav_api.run_api import spawn_with_args
 
 SITL_SLEEP_TIME = 5
 
@@ -238,7 +238,7 @@ class Drone:
             raw_args.append("--log_path")
             raw_args.append(uav_api_log_path)
 
-        self._api_process = run_with_args(raw_args)
+        self._api_process = spawn_with_args(raw_args)
         time.sleep(5)
     async def goto_initial_position(self):
         """
