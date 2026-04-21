@@ -18,7 +18,7 @@ from gradysim.protocol.plugin.dispatcher import create_dispatcher, DispatchRetur
 from gradysim.protocol.interface import IProtocol
 
 
-DATA_COLLECTION_INTERVAL = 0.5
+DATA_COLLECTION_INTERVAL = 0.1
 
 
 def handle_packet_tv(protocol: IProtocol, message: str) -> DispatchReturn:
@@ -49,7 +49,7 @@ class StatisticsProtocolWrapper:
     _statistics_tracked_variables_list: List[Dict[str, Any]]
     _statistics_collection_interval: float
 
-    def __init__(self, protocol: IProtocol, file_name_part: str, collection_interval: float):
+    def __init__(self, protocol: IProtocol, file_name_part: str, collection_interval: float = DATA_COLLECTION_INTERVAL):
         """
         Instantiates a protocol wrapper. Should not be instantiated directly, create a statistics using the
         [create_statistics][gradysim.protocol.plugin.statistics.create_statistics] method.
