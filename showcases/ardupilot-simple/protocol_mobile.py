@@ -23,7 +23,7 @@ class SimpleProtocolMobile(IProtocol):
     def initialize(self):
         self._logger.debug("Initializing mobile protocol")
 
-        create_statistics(self)
+        create_statistics(self, collection_interval=0.5)
 
         self.mission: MissionMobilityPlugin = MissionMobilityPlugin(
             self, MissionMobilityConfiguration(

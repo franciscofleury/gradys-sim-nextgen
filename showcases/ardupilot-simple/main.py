@@ -12,7 +12,7 @@ from protocol_ground import SimpleProtocolGround
 
 def run_simulation(ardupilot_path: str):
     builder = SimulationBuilder(SimulationConfiguration(
-        duration=300,
+        duration=180,
         real_time=True
     ))
 

@@ -16,7 +16,7 @@ class SimpleProtocolSensor(IProtocol):
     def initialize(self):
         self._logger.debug("initializing sensor protocol")
 
-        create_statistics(self)
+        create_statistics(self, collection_interval=0.5)
 
         self.provider.tracked_variables["packets"] = self.packets
         self.provider.schedule_timer("", self.provider.current_time() + random.random())

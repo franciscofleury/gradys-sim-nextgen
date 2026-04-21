@@ -15,7 +15,7 @@ class SimpleProtocolGround(IProtocol):
     def initialize(self):
         self._logger.debug("Initializing ground station protocol")
 
-        create_statistics(self)
+        create_statistics(self, collection_interval=0.5)
 
         self.provider.tracked_variables["packets"] = self.packets
 
