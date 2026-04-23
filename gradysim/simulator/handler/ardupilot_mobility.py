@@ -394,6 +394,7 @@ class ArdupilotMobilityHandler(INodeHandler):
         self._injected = False
         self._logger = logging.getLogger()
         self._report = {}
+        self._loop = asyncio.get_event_loop()
 
     def inject(self, event_loop: EventLoop):
         self._injected = True
@@ -466,10 +467,10 @@ class ArdupilotMobilityHandler(INodeHandler):
         if not self._configuration.simulate_drones:
             return
     
-    async def initialize(self):
-        await self._initialize_drones() 
+    def initialize(self):
+        self._loop.run_until_complete(self._initialize_drones())
         if self._configuration.generate_report:
-            await self._initialize_report()
+            self._loop.run_until_complete(self._initialize_report())
         self._setup_telemetry()     
 
     def _ardupilot_error(self, message):
@@ -605,10 +606,12 @@ class ArdupilotMobilityHandler(INodeHandler):
             self._logger.debug(f"Failed writing CSV report: {e}")
 
         self._logger.info(report_str)
-    async def finalize(self):
+    def finalize(self):
         """Ends simulation by finalizing report and shutting down drones."""
         if self._configuration.generate_report:
-            await self._finalize_report()
+            self._loop.run_until_complete(self._finalize_report())
         for node_id in self.drones.keys():
             drone = self.drones[node_id]
-            await drone.shutdown()
+            self._loop.run_until_complete(drone.shutdown())
+
+        self._loop.close()
