@@ -21,7 +21,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     'websockets>=12',
     'uav-api>=0.1.3',
