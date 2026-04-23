@@ -1,4 +1,3 @@
-import requests
 import time
 import aiohttp
 import asyncio
@@ -296,7 +295,7 @@ class Drone:
                     pass
 
             self._logger.debug(f"[DRONE-{self._node_id}] Request consumer task cancelled.")
-        except Exception as e:
+        except Exception:
             self._logger.warning(f"[DRONE-{self._node_id}] Error cancelling request consumer task")
         
         self._logger.debug(f"[DRONE-{self._node_id}] Closing HTTP session.")
@@ -431,7 +430,7 @@ class ArdupilotMobilityHandler(INodeHandler):
         for node_id in self.nodes.keys():
             drone = self.drones[node_id]
             battery_level = await drone.get_battery_level()
-            if battery_level == None:
+            if battery_level is None:
                 self._logger.debug(f"Error fetching battery level for node {node_id}. Cancelling report generation...")
                 self._configuration.generate_report = False
                 return
@@ -462,7 +461,7 @@ class ArdupilotMobilityHandler(INodeHandler):
             await asyncio.gather(*drone_init_tasks)  
         except Exception as e:
             self._logger.error(e)
-            self._ardupilot_error(f"Error initializing drones.")
+            self._ardupilot_error("Error initializing drones.")
 
         if not self._configuration.simulate_drones:
             return
@@ -571,11 +570,11 @@ class ArdupilotMobilityHandler(INodeHandler):
         Ends report tracking and outputs csv file with report information.
         """
         report_str = ""
-        report_str += f"GENERATING ARDUPILOT MOBILITY HANDLER REPORT:\n"
+        report_str += "GENERATING ARDUPILOT MOBILITY HANDLER REPORT:\n"
         for node_id in self.nodes.keys():
             drone = self.drones[node_id]
             battery_level = await drone.get_battery_level()
-            if battery_level == None:
+            if battery_level is None:
                 self._logger.debug(f"Error fetching battery level for node {node_id}. Cancelling report generation...")
                 self._configuration.generate_report = False
                 return
